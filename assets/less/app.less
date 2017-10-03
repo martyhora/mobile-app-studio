@@ -1,0 +1,41 @@
+@import (css) "../../node_modules/admin-lte/bootstrap/css/bootstrap.min.css";
+@import (css) "../../node_modules/admin-lte/dist/css/AdminLTE.min.css";
+@import (css) "../../node_modules/admin-lte/dist/css/skins/skin-blue.min.css";
+
+.fa-spin-custom, .glyphicon-spin {
+    -webkit-animation: spin 1000ms infinite linear;
+    animation: spin 1000ms infinite linear;
+}
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+@keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg);
+    }
+}
+
+.bold {
+    font-weight: bold;
+}
+
+text[text-anchor="middle"], text[text-anchor="start"], path {
+    cursor: pointer;
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 25px;
+}

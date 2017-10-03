@@ -1,0 +1,5 @@
+/node_modules
+/dist
+/api/v1/vendor/
+/api/v1/config.php
+/api/v1/Creator/ApplicationCreator.php
