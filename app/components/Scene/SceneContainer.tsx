@@ -142,17 +142,22 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     SectionApi.updateSection(this.state.sections, this.props.match.params.id, () => {});
   }
 
-  componentDidMount() {
-    SectionApi.fetchSections(this.props.match.params.id, (sections: Array<ISection>) => {
+  fetchData(sceneId: number) {
+    SectionApi.fetchSections(sceneId, (sections: Array<ISection>) => {
       this.setState({ sections });
     });
 
-    SceneApi.fetchScenesForApplicationBySceneId(
-      this.props.match.params.id,
-      (scenes: Array<IScene>) => {
-        this.setState({ scenes });
-      }
-    );
+    SceneApi.fetchScenesForApplicationBySceneId(sceneId, (scenes: Array<IScene>) => {
+      this.setState({ scenes });
+    });
+  }
+
+  componentDidMount() {
+    this.fetchData(this.props.match.params.id);
+  }
+
+  componentWillReceiveProps(nextProps: ISceneContainerProps) {
+    this.fetchData(nextProps.match.params.id);
   }
 
   render() {
@@ -160,6 +165,7 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
       <Scene
         sections={this.state.sections}
         sectionTitle={this.state.sectionTitle}
+        scenes={this.state.scenes}
         selectedSection={this.state.selectedSection}
         handleSectionTitleChange={this.handleSectionTitleChange.bind(this)}
         addSection={this.addSection.bind(this)}
@@ -169,7 +175,6 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
         handleSectionRemove={this.handleSectionRemove.bind(this)}
         handleColorParameterChange={this.handleColorParameterChange.bind(this)}
         saveScene={this.saveScene.bind(this)}
-        scenes={this.state.scenes}
       />
     );
   }

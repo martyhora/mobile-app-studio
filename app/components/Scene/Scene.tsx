@@ -5,6 +5,7 @@ import Sections from './Sections';
 import SectionsControl from './SectionsControl';
 import { IScene } from '../SceneList/SceneListContainer';
 import SectionsList from './SectionsList';
+import SceneListPreview from './SceneListPreview';
 
 interface ISceneProps {
   addSection: (sectionId) => void;
@@ -40,7 +41,11 @@ const Scene = ({
   saveScene,
 }: ISceneProps) => (
   <div className="row" style={{ marginLeft: 0, marginRight: 0 }}>
-    <section className="col-md-4">
+    <section className="col-md-2">
+      <SceneListPreview scenes={scenes} />
+    </section>
+
+    <section className="col-md-2">
       <SectionsList
         sections={sections}
         sectionTitle={sectionTitle}
