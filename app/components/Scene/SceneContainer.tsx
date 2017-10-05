@@ -23,7 +23,6 @@ export interface ISection {
 
 interface ISceneContainer {
   sections: Array<ISection>;
-  newSection: string;
   sectionTitle: string;
   selectedSection: number;
   scenes: Array<IScene>;
@@ -49,27 +48,21 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
 
     this.state = {
       sections: [],
-      newSection: '',
       sectionTitle: '',
       selectedSection: null,
       scenes: [],
     };
   }
 
-  handleNewSectionChange(e: ChangeEvent<HTMLSelectElement>): void {
-    this.setState({ newSection: e.currentTarget.value });
-  }
-
   handleSectionTitleChange(e: ChangeEvent<HTMLInputElement>): void {
     this.setState({ sectionTitle: e.currentTarget.value });
   }
 
-  addSection(): void {
-    const { sectionTitle, newSection, sections } = this.state;
+  addSection(type: string): void {
+    const { sectionTitle, sections } = this.state;
 
     if (
       sectionTitle === '' ||
-      newSection === '' ||
       sections.filter(section => section.title === sectionTitle).length > 0
     ) {
       return;
@@ -78,14 +71,14 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     let sections: Array<ISection> = sections;
 
     let section: ISection = {
+      type,
       title: sectionTitle,
-      type: newSection,
       marginTop: 0,
       marginBottom: 0,
       link: '',
     };
 
-    switch (this.state.newSection) {
+    switch (type) {
       case SECTION_BUTTON:
         section.caption = 'BUTTON';
         section.backgroundColor = '#00c0ef';
@@ -166,10 +159,8 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     return (
       <Scene
         sections={this.state.sections}
-        newSection={this.state.newSection}
         sectionTitle={this.state.sectionTitle}
         selectedSection={this.state.selectedSection}
-        handleNewSectionChange={this.handleNewSectionChange.bind(this)}
         handleSectionTitleChange={this.handleSectionTitleChange.bind(this)}
         addSection={this.addSection.bind(this)}
         handleSectionSelect={this.handleSectionSelect.bind(this)}

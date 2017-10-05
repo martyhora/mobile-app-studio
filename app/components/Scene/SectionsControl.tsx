@@ -25,155 +25,157 @@ const SectionsControl = ({
   handleColorParameterChange,
   scenes,
 }: ISectionsControlProps) => (
-  <div className="box-body">
-    {section !== undefined && (
-      <form className="form-horizontal">
-        <div className="box-body">
-          <div className="form-group">
-            <label className="col-sm-2 control-label">Title</label>
-            <div className="col-sm-10">
-              <input
-                type="text"
-                className="form-control"
-                value={section.title}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleSectionParameterChange(sectionIndex, 'title', e)}
-              />
-            </div>
-          </div>
-
-          {(section.type === SECTION_BUTTON || section.type === SECTION_TEXT) && (
+  <div className="box box-solid">
+    <div className="box-body">
+      {section !== undefined && (
+        <form className="form-horizontal">
+          <div className="box-body">
             <div className="form-group">
-              <label className="col-sm-2 control-label">Caption</label>
-              <div className="col-sm-10">
+              <label className="col-sm-3 control-label">Title</label>
+              <div className="col-sm-9">
                 <input
                   type="text"
                   className="form-control"
-                  value={section.caption}
+                  value={section.title}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleSectionParameterChange(sectionIndex, 'caption', e)}
+                    handleSectionParameterChange(sectionIndex, 'title', e)}
                 />
               </div>
             </div>
-          )}
 
-          {section.type === SECTION_TEXT && (
-            <div>
+            {(section.type === SECTION_BUTTON || section.type === SECTION_TEXT) && (
               <div className="form-group">
-                <label className="col-sm-2 control-label">Link</label>
-                <div className="col-sm-10">
-                  <SelectBox
-                    value={section.link}
-                    prompt="- Select -"
-                    onChange={(e: ChangeEvent<HTMLSelectElement>) =>
-                      handleSectionParameterChange(sectionIndex, 'link', e)}
-                    options={scenes.map((scene: IScene) => {
-                      return { id: scene.title, name: scene.title };
-                    })}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-2 control-label">Font size</label>
-                <div className="col-sm-10">
+                <label className="col-sm-3 control-label">Caption</label>
+                <div className="col-sm-9">
                   <input
-                    type="number"
-                    className="form-control"
-                    value={section.fontSize}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSectionParameterChange(sectionIndex, 'fontSize', e)}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-2 control-label">Color</label>
-                <div className="col-sm-10">
-                  <SketchPicker
-                    color={section.color}
-                    onChange={(color: string) => {
-                      handleColorParameterChange(sectionIndex, 'color', color);
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="form-group">
-            <label className="col-sm-2 control-label">Margin top</label>
-            <div className="col-sm-10">
-              <input
-                type="number"
-                className="form-control"
-                value={section.marginTop}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleSectionParameterChange(sectionIndex, 'marginTop', e)}
-              />
-            </div>
-          </div>
-          <div className="form-group">
-            <label className="col-sm-2 control-label">Margin bottom</label>
-            <div className="col-sm-10">
-              <input
-                type="number"
-                className="form-control"
-                value={section.marginBottom}
-                onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                  handleSectionParameterChange(sectionIndex, 'marginBottom', e)}
-              />
-            </div>
-          </div>
-
-          {section.type === SECTION_BUTTON && (
-            <div>
-              <div className="form-group">
-                <label className="col-sm-2 control-label">Backgroud color</label>
-                <div className="col-sm-10">
-                  <SketchPicker
-                    color={section.backgroundColor}
-                    onChange={(color: string) => {
-                      handleColorParameterChange(sectionIndex, 'backgroundColor', color);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="col-sm-2 control-label">onClick source code</label>
-                <div className="col-sm-10">
-                  <textarea
-                    style={{ height: '100px' }}
                     type="text"
                     className="form-control"
-                    value={section.sourceCode}
+                    value={section.caption}
                     onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleSectionParameterChange(sectionIndex, 'sourceCode', e)}
+                      handleSectionParameterChange(sectionIndex, 'caption', e)}
                   />
                 </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {section.type === SECTION_LISTVIEW && (
+            {section.type === SECTION_TEXT && (
+              <div>
+                <div className="form-group">
+                  <label className="col-sm-3 control-label">Link</label>
+                  <div className="col-sm-9">
+                    <SelectBox
+                      value={section.link}
+                      prompt="- Select -"
+                      onChange={(e: ChangeEvent<HTMLSelectElement>) =>
+                        handleSectionParameterChange(sectionIndex, 'link', e)}
+                      options={scenes.map((scene: IScene) => {
+                        return { id: scene.title, name: scene.title };
+                      })}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="col-sm-3 control-label">Font size</label>
+                  <div className="col-sm-9">
+                    <input
+                      type="number"
+                      className="form-control"
+                      value={section.fontSize}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleSectionParameterChange(sectionIndex, 'fontSize', e)}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="col-sm-3 control-label">Color</label>
+                  <div className="col-sm-9">
+                    <SketchPicker
+                      color={section.color}
+                      onChange={(color: string) => {
+                        handleColorParameterChange(sectionIndex, 'color', color);
+                      }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="form-group">
-              <label className="col-sm-2 control-label">API URI</label>
-              <div className="col-sm-10">
+              <label className="col-sm-3 control-label">Margin top</label>
+              <div className="col-sm-9">
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
-                  value={section.apiUri}
+                  value={section.marginTop}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleSectionParameterChange(sectionIndex, 'apiUri', e)}
+                    handleSectionParameterChange(sectionIndex, 'marginTop', e)}
                 />
               </div>
             </div>
-          )}
-        </div>
-      </form>
-    )}
-    {section === undefined && <div>Select a section to configure it's parameters.</div>}
+            <div className="form-group">
+              <label className="col-sm-3 control-label">Margin bottom</label>
+              <div className="col-sm-9">
+                <input
+                  type="number"
+                  className="form-control"
+                  value={section.marginBottom}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    handleSectionParameterChange(sectionIndex, 'marginBottom', e)}
+                />
+              </div>
+            </div>
+
+            {section.type === SECTION_BUTTON && (
+              <div>
+                <div className="form-group">
+                  <label className="col-sm-3 control-label">Backgroud color</label>
+                  <div className="col-sm-9">
+                    <SketchPicker
+                      color={section.backgroundColor}
+                      onChange={(color: string) => {
+                        handleColorParameterChange(sectionIndex, 'backgroundColor', color);
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group">
+                  <label className="col-sm-3 control-label">onClick source code</label>
+                  <div className="col-sm-9">
+                    <textarea
+                      style={{ height: '100px' }}
+                      type="text"
+                      className="form-control"
+                      value={section.sourceCode}
+                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                        handleSectionParameterChange(sectionIndex, 'sourceCode', e)}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {section.type === SECTION_LISTVIEW && (
+              <div className="form-group">
+                <label className="col-sm-3 control-label">API URI</label>
+                <div className="col-sm-9">
+                  <input
+                    type="text"
+                    className="form-control"
+                    value={section.apiUri}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleSectionParameterChange(sectionIndex, 'apiUri', e)}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </form>
+      )}
+      {section === undefined && <div>Select a section to configure it's parameters.</div>}
+    </div>
   </div>
 );
 

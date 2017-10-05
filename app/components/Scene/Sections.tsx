@@ -119,15 +119,17 @@ const Sections = ({
   handleSortChange,
   handleSectionRemove,
 }: ISectionsProps) => (
-  <div className="box-body">
-    <SortableList
-      useDragHandle={true}
-      items={sections}
-      onSortEnd={handleSortChange}
-      handleSectionSelect={handleSectionSelect}
-      selectedSection={selectedSection}
-      handleSectionRemove={handleSectionRemove}
-    />
+  <div className="box box-solid">
+    <div className="box-body">
+      <SortableList
+        useDragHandle={true}
+        items={sections}
+        onSortEnd={handleSortChange}
+        handleSectionSelect={handleSectionSelect}
+        selectedSection={selectedSection}
+        handleSectionRemove={handleSectionRemove}
+      />
+    </div>
   </div>
 );
 
