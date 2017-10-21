@@ -1,51 +1,50 @@
 import axios, { AxiosResponse } from 'axios';
 
 export default class BaseApi {
-  static fetchData(apiUri: string, onDataFetched: (any) => void) {
-    axios
-      .get(apiUri)
-      .then((response: AxiosResponse) => {
-        onDataFetched(response.data);
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
+  static async fetchData(apiUri: string): any {
+    try {
+      const response: AxiosResponse = await axios(apiUri);
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  static fetchDataByResourceId(apiUri: string, resourceId: number, onDataFetched: (any) => void) {
-    BaseApi.fetchData(`${apiUri}/${resourceId}`, onDataFetched);
+  static fetchDataByResourceId(apiUri: string, resourceId: number): any {
+    return BaseApi.fetchData(`${apiUri}/${resourceId}`);
   }
 
-  static deleteData(apiUri: string, onDataDeleted: () => void) {
-    axios
-      .delete(apiUri)
-      .then((response: AxiosResponse) => {
-        if (response.data.success) {
-          onDataDeleted();
-        } else {
-        }
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
+  static async deleteData(apiUri: string, onDataDeleted: () => void): void {
+    try {
+      const response: AxiosResponse = await axios.delete(apiUri);
+
+      if (response.data.success) {
+        onDataDeleted();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  static deleteDataByResourceId(apiUrl: string, resourceId: number, onDataDeleted: () => void) {
+  static deleteDataByResourceId(
+    apiUrl: string,
+    resourceId: number,
+    onDataDeleted: () => void
+  ): void {
     BaseApi.deleteData(`${apiUrl}/${resourceId}`, onDataDeleted);
   }
 
-  static updateData(apiUri: string, data: object, onDataUpdated: () => void) {
-    axios
-      .put(apiUri, data)
-      .then((response: AxiosResponse) => {
-        if (response.data.success) {
-          onDataUpdated();
-        } else {
-        }
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
+  static async updateData(apiUri: string, data: object, onDataUpdated: () => void): void {
+    try {
+      const response: AxiosResponse = await axios.put(apiUri, data);
+
+      if (response.data.success) {
+        onDataUpdated();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   static updateDataByResourceId(
@@ -53,21 +52,19 @@ export default class BaseApi {
     data: object,
     resourceId: number,
     onDataUpdated: () => void
-  ) {
+  ): void {
     BaseApi.updateData(`${apiUrl}/${resourceId}`, data, onDataUpdated);
   }
 
-  static postData(apiUri: string, data: object, onDataPosted: () => void) {
-    axios
-      .post(apiUri, data)
-      .then((response: AxiosResponse) => {
-        if (response.data.success) {
-          onDataPosted();
-        } else {
-        }
-      })
-      .catch((error: Error) => {
-        console.log(error);
-      });
+  static async postData(apiUri: string, data: object, onDataPosted: () => void): void {
+    try {
+      const response: AxiosResponse = await axios.post(apiUri, data);
+
+      if (response.data.success) {
+        onDataPosted();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 }

@@ -28,7 +28,12 @@ const DragHandle = SortableHandle(() => (
   <span
     title="Move section"
     className="glyphicon glyphicon-sort"
-    style={{ cursor: 'move', fontSize: '20px', marginLeft: '-20px', marginTop: '8px' }}
+    style={{
+      cursor: 'move',
+      fontSize: '20px',
+      marginLeft: '-20px',
+      marginTop: '8px',
+    }}
   />
 ));
 
@@ -43,7 +48,12 @@ const SortableItem = SortableElement(
           <div>
             {value.type === SECTION_TEXT && (
               <div style={{ height: '35px', width: '100%' }}>
-                <span style={{ color: value.color, fontSize: `${value.fontSize}px` }}>
+                <span
+                  style={{
+                    color: value.color,
+                    fontSize: `${value.fontSize}px`,
+                  }}
+                >
                   {value.caption}
                 </span>
               </div>
@@ -86,7 +96,12 @@ const SortableItem = SortableElement(
         <span
           className="glyphicon glyphicon-remove"
           title="Remove section"
-          style={{ cursor: 'pointer', fontSize: '20px', marginLeft: '-20px', marginTop: '8px' }}
+          style={{
+            cursor: 'pointer',
+            fontSize: '20px',
+            marginLeft: '-20px',
+            marginTop: '8px',
+          }}
           onClick={() => handleSectionRemove(i)}
         />
       </div>

@@ -3,11 +3,11 @@ import BaseApi from './BaseApi';
 import { ISection } from '../components/Scene/SceneContainer';
 
 export default class SectionApi {
-  static fetchSections(sectionId: number, onDataFetched: (sections: Array<ISection>) => void) {
-    BaseApi.fetchData(`${API_SECTION_URI}/${sectionId}`, onDataFetched);
+  static fetchSections(sectionId: number): Array<ISection> {
+    return BaseApi.fetchData(`${API_SECTION_URI}/${sectionId}`);
   }
 
-  static updateSection(data: Array<ISection>, sectionId: number, onDataPosted: () => void) {
+  static updateSection(data: Array<ISection>, sectionId: number, onDataPosted: () => void): void {
     BaseApi.updateDataByResourceId(API_SECTION_URI, data, sectionId, onDataPosted);
   }
 }

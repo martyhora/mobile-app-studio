@@ -54,12 +54,12 @@ export default class ApplicationListContainer extends React.Component<
     });
   }
 
-  handleApplicationEdit(applicationId: number): void {
-    ApplicationApi.fetchApplicationById(applicationId, (application: IApplication) => {
-      SceneApi.fetchScenesByApplicationId(applicationId, (scenes: Array<IScene>) => {
-        this.setState({ application, scenes: scenes });
-      });
-    });
+  async handleApplicationEdit(applicationId: number): void {
+    const application = await ApplicationApi.fetchApplicationById(applicationId);
+
+    const scenes = await SceneApi.fetchScenesByApplicationId(applicationId);
+
+    this.setState({ application, scenes });
   }
 
   handleApplicationSave(): void {
@@ -110,10 +110,10 @@ export default class ApplicationListContainer extends React.Component<
     this.setState({ application });
   }
 
-  fetchApplications(): void {
-    ApplicationApi.fetchApplications((applications: Array<IApplication>) => {
-      this.setState({ applications });
-    });
+  async fetchApplications(): void {
+    const applications = await ApplicationApi.fetchApplications();
+
+    this.setState({ applications });
   }
 
   handleMenuItemAdd(): void {

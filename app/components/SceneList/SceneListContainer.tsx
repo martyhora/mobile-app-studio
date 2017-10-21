@@ -51,10 +51,10 @@ export default class SceneListContainer extends React.Component<
     this.setState({ scene });
   }
 
-  handleSceneEdit(sceneId: number): void {
-    SceneApi.fetchSceneById(sceneId, (scene: IScene) => {
-      this.setState({ scene });
-    });
+  async handleSceneEdit(sceneId: number): void {
+    const scene = await SceneApi.fetchSceneById(sceneId);
+
+    this.setState({ scene });
   }
 
   handleSceneSave(): void {
@@ -88,14 +88,14 @@ export default class SceneListContainer extends React.Component<
 
       scenes.splice(sceneIndex, 1);
 
-      this.setState({ scenes: scenes });
+      this.setState({ scenes });
     });
   }
 
-  fetchScenes() {
-    SceneApi.fetchScenesByApplicationId(this.props.match.params.id, (scenes: Array<IScene>) => {
-      this.setState({ scenes: scenes });
-    });
+  async fetchScenes() {
+    const scenes = await SceneApi.fetchScenesByApplicationId(this.props.match.params.id);
+
+    this.setState({ scenes });
   }
 
   componentDidMount() {

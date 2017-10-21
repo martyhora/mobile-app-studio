@@ -142,14 +142,12 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     SectionApi.updateSection(this.state.sections, this.props.match.params.id, () => {});
   }
 
-  fetchData(sceneId: number) {
-    SectionApi.fetchSections(sceneId, (sections: Array<ISection>) => {
-      this.setState({ sections });
-    });
+  async fetchData(sceneId: number) {
+    const sections = await SectionApi.fetchSections(sceneId);
 
-    SceneApi.fetchScenesForApplicationBySceneId(sceneId, (scenes: Array<IScene>) => {
-      this.setState({ scenes });
-    });
+    const scenes = await SceneApi.fetchScenesForApplicationBySceneId(sceneId);
+
+    this.setState({ sections, scenes });
   }
 
   componentDidMount() {
