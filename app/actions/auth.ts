@@ -93,8 +93,6 @@ export const loginUser: ActionCreator<ThunkAction<Promise<void>, AppState, {}>> 
       dispatch(handleLoginSuccess(authResponse.authToken, authResponse.user));
 
       sessionStorage.setItem(AUTH_TOKEN_KEY, authResponse.authToken);
-
-      history.push('/application-list');
     } catch (authError) {
       dispatch(handleWrongLoginCredentials());
     }

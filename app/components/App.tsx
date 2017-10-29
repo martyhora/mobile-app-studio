@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import ApplicationListContainer from './ApplicationList/ApplicationListContainer';
 import SceneContainer from './Scene/SceneContainer';
 import SceneListContainer from './SceneList/SceneListContainer';
-import { SecuredRoute } from '../routes';
-import LoginFormContainer from './Auth/LoginFormContainer';
+import { SecuredRoute, LoginRoute } from '../routes';
 import history from '../history';
 import { logoutUser } from '../actions/auth';
 import { IUser } from '../api/AuthApi';
@@ -82,7 +81,7 @@ const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
                 </a>
                 <ul className="treeview-menu">
                   <li>
-                    <Link to="/application-list">Application list</Link>
+                    <Link to="/">Application list</Link>
                   </li>
                 </ul>
               </li>
@@ -93,11 +92,12 @@ const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
 
       <div className={`content-wrapper ${!userAuthenticated ? `content-wrapper--login` : ''}`}>
         <section className="content-header">
-          <Route path="/login" component={LoginFormContainer} />
+          <LoginRoute path="/login" userAuthenticated={userAuthenticated} />
 
           <SecuredRoute
             name="application-list"
-            path="/application-list/"
+            path="/"
+            exact
             component={ApplicationListContainer}
             userAuthenticated={userAuthenticated}
           />
