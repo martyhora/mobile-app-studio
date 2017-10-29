@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ISection } from './SceneContainer';
 import { ChangeEvent } from 'react';
 import { SECTION_BUTTON, SECTION_LISTVIEW, SECTION_TEXT } from '../../constants';
-import { SketchPicker } from 'react-color';
+import { ColorResult, SketchPicker } from 'react-color';
 import SelectBox from '../SelectBox';
 import { IScene } from '../SceneList/SceneListContainer';
 
@@ -12,9 +12,9 @@ interface ISectionsControlProps {
   handleSectionParameterChange: (
     sectionIndex: number,
     parameter: string,
-    e: ChangeEvent<HTMLInputElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => void;
-  handleColorParameterChange: (sectionIndex: number, parameter: string, color: any) => void;
+  handleColorParameterChange: (sectionIndex: number, parameter: string, color: ColorResult) => void;
   scenes: Array<IScene>;
 }
 
@@ -93,7 +93,7 @@ const SectionsControl = ({
                   <div className="col-sm-9">
                     <SketchPicker
                       color={section.color}
-                      onChange={(color: string) => {
+                      onChange={(color: ColorResult) => {
                         handleColorParameterChange(sectionIndex, 'color', color);
                       }}
                     />
@@ -134,7 +134,7 @@ const SectionsControl = ({
                   <div className="col-sm-9">
                     <SketchPicker
                       color={section.backgroundColor}
-                      onChange={(color: string) => {
+                      onChange={(color: ColorResult) => {
                         handleColorParameterChange(sectionIndex, 'backgroundColor', color);
                       }}
                     />
@@ -149,7 +149,7 @@ const SectionsControl = ({
                       type="text"
                       className="form-control"
                       value={section.sourceCode}
-                      onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                         handleSectionParameterChange(sectionIndex, 'sourceCode', e)}
                     />
                   </div>

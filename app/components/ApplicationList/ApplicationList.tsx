@@ -4,6 +4,7 @@ import { IApplication } from './ApplicationListContainer';
 import { Link } from 'react-router-dom';
 import ApplicationForm from './ApplicationForm';
 import { IScene } from '../SceneList/SceneListContainer';
+import ErrorList from '../ErrorList';
 
 interface IApplicationProps {
   addApplication: () => void;
@@ -21,6 +22,8 @@ interface IApplicationProps {
   handleMenuItemRemove: (menuItemIndex: number) => void;
   handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
   scenes: Array<IScene>;
+  isLoading: boolean;
+  apiErrors: Array<string>;
 }
 
 const ApplicationList = ({
@@ -35,6 +38,8 @@ const ApplicationList = ({
   handleMenuItemRemove,
   handleParameterChange,
   scenes,
+  isLoading,
+  apiErrors,
 }: IApplicationProps) => (
   <div>
     <div style={{ marginBottom: '20px' }}>
@@ -52,6 +57,8 @@ const ApplicationList = ({
     </div>
     <div className="box box-solid">
       <div className="box-body">
+        <ErrorList header="Server error" errors={apiErrors} />
+
         <table className="table">
           <thead>
             <tr>
@@ -60,49 +67,64 @@ const ApplicationList = ({
               <th style={{ width: '6%' }}>Actions</th>
             </tr>
           </thead>
-          <tbody>
-            {applications.map((application: IApplication, i: number) => (
-              <tr key={i}>
-                <td>
-                  <Link to={`/scene-list/${application.id}`} key={i}>
-                    {application.title}
-                  </Link>
-                </td>
-                <td>{application.apiBase}</td>
-                <td>
-                  <span
-                    className="glyphicon glyphicon-remove"
-                    title="Remove application"
-                    style={{ cursor: 'pointer', fontSize: '20px' }}
-                    onClick={() => handleApplicationRemove(i, application.id)}
-                  />
-                  <span
-                    className="glyphicon glyphicon-edit"
-                    title="Edit application"
-                    style={{
-                      cursor: 'pointer',
-                      fontSize: '20px',
-                      marginLeft: '7px',
-                    }}
-                    onClick={() => handleApplicationEdit(application.id)}
-                    data-toggle="modal"
-                    data-target="#applicationModal"
-                  />
-                  <a href={`/api/v1/applications/create/${application.id}`}>
+          {!isLoading && (
+            <tbody>
+              {applications.map((application: IApplication, i: number) => (
+                <tr key={i}>
+                  <td>
+                    <Link to={`/scene-list/${application.id}`} key={i}>
+                      {application.title}
+                    </Link>
+                  </td>
+                  <td>{application.apiBase}</td>
+                  <td>
                     <span
-                      className="glyphicon glyphicon-download-alt"
-                      title="Create application"
+                      className="glyphicon glyphicon-remove"
+                      title="Remove application"
+                      style={{ cursor: 'pointer', fontSize: '20px' }}
+                      onClick={() => handleApplicationRemove(i, application.id)}
+                    />
+                    <span
+                      className="glyphicon glyphicon-edit"
+                      title="Edit application"
                       style={{
                         cursor: 'pointer',
                         fontSize: '20px',
                         marginLeft: '7px',
                       }}
+                      onClick={() => handleApplicationEdit(application.id)}
+                      data-toggle="modal"
+                      data-target="#applicationModal"
                     />
-                  </a>
+                    <a href={`/api/v1/applications/create/${application.id}`}>
+                      <span
+                        className="glyphicon glyphicon-download-alt"
+                        title="Create application"
+                        style={{
+                          cursor: 'pointer',
+                          fontSize: '20px',
+                          marginLeft: '7px',
+                        }}
+                      />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          )}
+
+          {isLoading && (
+            <tbody className="text-center">
+              <tr>
+                <td colSpan="3">
+                  <span
+                    className="glyphicon glyphicon-spin glyphicon-refresh text-primary"
+                    style={{ fontSize: '20px' }}
+                  />
                 </td>
               </tr>
-            ))}
-          </tbody>
+            </tbody>
+          )}
         </table>
       </div>
     </div>

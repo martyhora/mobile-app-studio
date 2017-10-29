@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ChangeEvent } from 'react';
-import { IScene } from '../SceneList/SceneListContainer';
+import { IScene } from './SceneListContainer';
 
 interface ISceneProps {
   scene: IScene;

@@ -26,7 +26,7 @@ const sectionTypes: Array<ISectionType> = [
 interface ISectionsListProps {
   sections: Array<ISection>;
   sectionTitle: string;
-  addSection: (sectionId) => void;
+  addSection: (sectionType: string) => void;
   saveScene: () => void;
   handleSectionTitleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }

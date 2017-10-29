@@ -8,7 +8,7 @@ import ScenePreview from './ScenePreview';
 interface ISceneProps {
   scene: IScene;
   scenes: Array<IScene>;
-  handleParameterChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
   handleSceneRemove: (sceneIndex: number, sceneId: number) => void;
   handleSceneEdit: (sceneId: number) => void;
   handleSceneSave: () => void;

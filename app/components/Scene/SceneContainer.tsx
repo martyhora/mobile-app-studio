@@ -6,6 +6,8 @@ import SectionApi from '../../api/SectionApi';
 import { IScene } from '../SceneList/SceneListContainer';
 import SceneApi from '../../api/SceneApi';
 import { SECTION_BUTTON, SECTION_LISTVIEW, SECTION_TEXT } from '../../constants';
+import { connect } from 'react-redux';
+import { ColorResult } from 'react-color';
 
 export interface ISection {
   title: string;
@@ -21,7 +23,7 @@ export interface ISection {
   fontSize?: number;
 }
 
-interface ISceneContainer {
+interface ISceneContainerState {
   sections: Array<ISection>;
   sectionTitle: string;
   selectedSection: number;
@@ -34,6 +36,7 @@ export interface ISortData {
 }
 
 interface ISceneContainerProps {
+  authToken: string;
   match: {
     params: {
       id?: number;
@@ -42,7 +45,7 @@ interface ISceneContainerProps {
   history: any;
 }
 
-export default class SceneContainer extends React.Component<ISceneContainerProps, ISceneContainer> {
+class SceneContainer extends React.Component<ISceneContainerProps, ISceneContainerState> {
   constructor() {
     super();
 
@@ -59,7 +62,7 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
   }
 
   addSection(type: string): void {
-    const { sectionTitle, sections } = this.state;
+    let { sectionTitle, sections } = this.state;
 
     if (
       sectionTitle === '' ||
@@ -67,8 +70,6 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     ) {
       return;
     }
-
-    let sections: Array<ISection> = sections;
 
     let section: ISection = {
       type,
@@ -114,7 +115,7 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     this.setState({ sections });
   }
 
-  handleColorParameterChange(sectionIndex: number, parameter: string, color: any): void {
+  handleColorParameterChange(sectionIndex: number, parameter: string, color: ColorResult): void {
     let sections: Array<ISection> = this.state.sections;
 
     sections[sectionIndex][parameter] = color.hex;
@@ -139,13 +140,18 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
   }
 
   saveScene() {
-    SectionApi.updateSection(this.state.sections, this.props.match.params.id, () => {});
+    SectionApi.updateSection(
+      this.state.sections,
+      this.props.match.params.id,
+      () => {},
+      this.props.authToken
+    );
   }
 
   async fetchData(sceneId: number) {
-    const sections = await SectionApi.fetchSections(sceneId);
+    const sections = await SectionApi.fetchSections(sceneId, this.props.authToken);
 
-    const scenes = await SceneApi.fetchScenesForApplicationBySceneId(sceneId);
+    const scenes = await SceneApi.fetchScenesForApplicationBySceneId(sceneId, this.props.authToken);
 
     this.setState({ sections, scenes });
   }
@@ -177,3 +183,7 @@ export default class SceneContainer extends React.Component<ISceneContainerProps
     );
   }
 }
+
+export default connect(state => ({
+  authToken: state.auth.authToken,
+}))(SceneContainer);

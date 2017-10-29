@@ -1,12 +1,16 @@
 <?php
 
+use Authentication\JwtAuth;
 use Creator\ApplicationCreator;
 use DbModel\ApplicationModel;
 use DbModel\SceneModel;
 use DbModel\SectionModel;
+use DbModel\UserModel;
 use Medoo\Medoo;
+use Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface;
 
 require 'vendor/autoload.php';
 
@@ -21,10 +25,35 @@ if (!class_exists('Creator\ApplicationCreator')) {
 require 'config.php';
 
 $app = new \Slim\App;
+$configuration = [
+    'settings' => [
+        'displayErrorDetails' => true,
+    ],
+];
+$c = new \Slim\Container($configuration);
+$app = new \Slim\App($c);
+
+$jwtAuth = new JwtAuth($config['jwt']['key'], $config['jwt']['algorithm']);
+
+$app->add(function (ServerRequestInterface $request, ResponseInterface $response, $next) use ($jwtAuth) {
+    if ($request->getUri()->getPath() !== 'auth') {
+        $user = $jwtAuth->getUserData($request->getHeader('Authorization')[0]);
+
+        if (!$user) {
+            return $response->withJson(['success' => false, 'authorizationFailed' => true]);
+        }
+    }
+
+    $response = $next($request, $response);
+
+    return $response;
+});
+
 
 $sceneModel = new SceneModel(new Medoo($config['db']));
 $sectionModel = new SectionModel(new Medoo($config['db']));
 $applicationModel = new ApplicationModel(new Medoo($config['db']));
+$userModel = new UserModel(new Medoo($config['db']));
 $applicationCreator = new ApplicationCreator($config);
 
 $app->get('/scenes/{applicationId}', function (Request $request, Response $response, $args) use ($sceneModel) {
@@ -122,6 +151,32 @@ $app->put('/sections/{sceneId}', function (Request $request, Response $response,
     $sceneModel->updateById(['sections' => json_encode($data)], $args['sceneId']);
 
     return $response->withJson(['success' => true]);
+});
+
+$app->post('/auth', function (Request $request, Response $response) use ($app, $userModel, $jwtAuth) {
+    $data = $request->getParsedBody();
+
+    $user = $userModel->fetchUserByCredentials($data['username'], $data['password']);
+
+    if (!$user) {
+        return $response->withJson(['success' => false]);
+    }
+
+    unset($user['password']);
+
+    return $response->withJson(['success' => true, 'authToken' => $jwtAuth->createToken($user), 'user' => $user]);
+});
+
+$app->get('/user', function (Request $request, Response $response) use ($app, $userModel, $jwtAuth) {
+    $user = $userModel->fetchById($jwtAuth->getUserData($request->getHeader('Authorization')[0])->id);
+
+    if (!$user) {
+        return $response->withJson(['success' => false]);
+    }
+
+    unset($user['password']);
+
+    return $response->withJson(['success' => true, 'user' => $user]);
 });
 
 $app->run();

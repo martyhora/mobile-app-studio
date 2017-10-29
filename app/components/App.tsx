@@ -1,71 +1,124 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { Router, Route, Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 import ApplicationListContainer from './ApplicationList/ApplicationListContainer';
 import SceneContainer from './Scene/SceneContainer';
 import SceneListContainer from './SceneList/SceneListContainer';
+import { SecuredRoute } from '../routes';
+import LoginFormContainer from './Auth/LoginFormContainer';
+import history from '../history';
+import { logoutUser } from '../actions/auth';
+import { IUser } from '../api/AuthApi';
 
-const App = () => (
-  <Router>
+interface AppProps {
+  userAuthenticated: boolean;
+  logoutUser: () => void;
+  user: IUser;
+}
+
+const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
+  <Router history={history}>
     <div className="wrapper">
-      <header className="main-header">
-        <a href="" className="logo">
-          <span className="logo-mini">
-            <b>Mobile App</b> Studio
-          </span>
+      {userAuthenticated && (
+        <header className="main-header">
+          <a href="" className="logo">
+            <span className="logo-mini">
+              <b>Mobile App</b> Studio
+            </span>
 
-          <span className="logo-lg">
-            <b>Mobile App</b> Studio
-          </span>
-        </a>
+            <span className="logo-lg">
+              <b>Mobile App</b> Studio
+            </span>
+          </a>
 
-        <nav className="navbar navbar-static-top" role="navigation">
-          <div className="navbar-custom-menu" />
-        </nav>
-      </header>
-      <aside className="main-sidebar">
-        <section className="sidebar">
-          <div className="user-panel">
-            <div className="pull-left image" />
-            <div className="pull-left info">
-              <p />
-              <a href="#">
-                <i className="fa fa-circle text-success" /> Online
-              </a>
-            </div>
-          </div>
-
-          <ul className="sidebar-menu">
-            <li className="treeview">
-              <a href="#">
-                <i className="fa fa-link" /> <span>Applications</span>{' '}
-                <i className="fa fa-angle-left pull-right" />
-              </a>
-              <ul className="treeview-menu">
+          <nav className="navbar navbar-static-top" role="navigation">
+            <a href="#" className="sidebar-toggle visible-xs" data-toggle="offcanvas" role="button">
+              <span className="sr-only">Toggle navigation</span>
+            </a>
+            <div className="navbar-custom-menu">
+              <ul className="nav navbar-nav">
+                <li className="dropdown user user-menu">
+                  <a href="" className="dropdown-toggle" data-toggle="dropdown">
+                    {user.name}
+                    {/*<img src="/images/user2-160x160.jpg" className="user-image" alt="User Image"/>*/}
+                    <span className="hidden-xs" />
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li className="user-header">
+                      {/*<img src="/images/user2-160x160.jpg" className="img-circle" alt="User Image"/>*/}
+                      <p>{user.name}</p>
+                    </li>
+                  </ul>
+                </li>
                 <li>
-                  <Link to="/application-list">Application list</Link>
+                  <a style={{ cursor: 'pointer' }} onClick={logoutUser}>
+                    <i className="fa fa-sign-out fa-fw" /> Logout
+                  </a>
                 </li>
               </ul>
-            </li>
-          </ul>
-        </section>
-      </aside>
+            </div>
+          </nav>
+        </header>
+      )}
+      {userAuthenticated && (
+        <aside className="main-sidebar">
+          <section className="sidebar">
+            <div className="user-panel">
+              <div className="pull-left image" />
+              <div className="pull-left info">
+                <p />
+                <a href="#">
+                  <i className="fa fa-circle text-success" /> Online
+                </a>
+              </div>
+            </div>
 
-      <div className="content-wrapper">
+            <ul className="sidebar-menu">
+              <li className="treeview">
+                <a href="#">
+                  <i className="fa fa-link" /> <span>Applications</span>{' '}
+                  <i className="fa fa-angle-left pull-right" />
+                </a>
+                <ul className="treeview-menu">
+                  <li>
+                    <Link to="/application-list">Application list</Link>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </section>
+        </aside>
+      )}
+
+      <div className={`content-wrapper ${!userAuthenticated ? `content-wrapper--login` : ''}`}>
         <section className="content-header">
-          <Route
+          <Route path="/login" component={LoginFormContainer} />
+
+          <SecuredRoute
             name="application-list"
             path="/application-list/"
             component={ApplicationListContainer}
+            userAuthenticated={userAuthenticated}
           />
-          <Route name="scene" path="/scene/:id" component={SceneContainer} />
-          <Route name="scene-list" path="/scene-list/:id" component={SceneListContainer} />
+          <SecuredRoute
+            name="scene"
+            path="/scene/:id"
+            component={SceneContainer}
+            userAuthenticated={userAuthenticated}
+          />
+          <SecuredRoute
+            name="scene-list"
+            path="/scene-list/:id"
+            component={SceneListContainer}
+            userAuthenticated={userAuthenticated}
+          />
         </section>
 
         <section className="content" />
       </div>
 
-      <footer className="main-footer">
+      <footer className={`main-footer ${!userAuthenticated ? `main-footer--login` : ''}`}>
         <div className="pull-right hidden-xs" />
 
         <strong>Copyright &copy; 2017</strong>
@@ -76,4 +129,14 @@ const App = () => (
   </Router>
 );
 
-export default App;
+export default connect(
+  state => ({
+    userAuthenticated: state.auth.authToken !== '',
+    user: state.auth.user !== null ? state.auth.user : {},
+  }),
+  dispatch => ({
+    logoutUser: () => {
+      dispatch(logoutUser());
+    },
+  })
+)(App);

@@ -9,4 +9,8 @@ $config = [
         'password' => '',
         'charset' => 'utf8'
     ],
+    'jwt' => [
+        'key' => 'superSecretKey',
+        'algorithm' => 'HS256',
+    ]
 ];

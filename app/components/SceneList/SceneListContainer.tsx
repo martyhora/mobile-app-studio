@@ -3,19 +3,22 @@ import SceneList from './SceneList';
 import { ChangeEvent } from 'react';
 import SceneApi from '../../api/SceneApi';
 import { ISection } from '../Scene/SceneContainer';
+import { connect } from 'react-redux';
 
 export interface IScene {
   id?: number;
+  applicationId?: number;
   title: string;
   sections: Array<ISection>;
 }
 
-interface ISceneListContainer {
+interface ISceneListContainerState {
   scenes: Array<IScene>;
   scene: IScene;
 }
 
 interface ISceneListContainerProps {
+  authToken: string;
   match: {
     params: {
       id?: number;
@@ -24,24 +27,20 @@ interface ISceneListContainerProps {
   history: any;
 }
 
-const defaultScene = {
+const defaultScene: IScene = {
   id: null,
   title: '',
   sections: [],
 };
 
-export default class SceneListContainer extends React.Component<
+class SceneListContainer extends React.Component<
   ISceneListContainerProps,
-  ISceneListContainer
+  ISceneListContainerState
 > {
-  constructor() {
-    super();
-
-    this.state = {
-      scenes: [],
-      scene: defaultScene,
-    };
-  }
+  state: ISceneListContainerState = {
+    scenes: [],
+    scene: defaultScene,
+  };
 
   handleParameterChange(parameter: string, e: ChangeEvent<HTMLInputElement>): void {
     let scene: IScene = this.state.scene;
@@ -51,8 +50,8 @@ export default class SceneListContainer extends React.Component<
     this.setState({ scene });
   }
 
-  async handleSceneEdit(sceneId: number): void {
-    const scene = await SceneApi.fetchSceneById(sceneId);
+  async handleSceneEdit(sceneId: number) {
+    const scene = await SceneApi.fetchSceneById(sceneId, this.props.authToken);
 
     this.setState({ scene });
   }
@@ -64,7 +63,7 @@ export default class SceneListContainer extends React.Component<
       return;
     }
 
-    const onSectionSaved = () => {
+    const onSectionSaved = (): void => {
       this.setState({ scene: defaultScene });
 
       this.fetchScenes();
@@ -73,27 +72,35 @@ export default class SceneListContainer extends React.Component<
     if (!id) {
       SceneApi.addScene(
         { title, applicationId: this.props.match.params.id, sections: [] },
-        onSectionSaved
+        onSectionSaved,
+        this.props.authToken
       );
     } else {
-      SceneApi.updateScene(id, this.state.scene, onSectionSaved);
+      SceneApi.updateScene(id, this.state.scene, onSectionSaved, this.props.authToken);
     }
 
     $('#sceneModal').modal('toggle');
   }
 
   handleSceneRemove(sceneIndex: number, sceneId: number): void {
-    SceneApi.deleteScene(sceneId, () => {
-      let scenes: Array<IScene> = this.state.scenes;
+    SceneApi.deleteScene(
+      sceneId,
+      () => {
+        let scenes: Array<IScene> = this.state.scenes;
 
-      scenes.splice(sceneIndex, 1);
+        scenes.splice(sceneIndex, 1);
 
-      this.setState({ scenes });
-    });
+        this.setState({ scenes });
+      },
+      this.props.authToken
+    );
   }
 
   async fetchScenes() {
-    const scenes = await SceneApi.fetchScenesByApplicationId(this.props.match.params.id);
+    const scenes = await SceneApi.fetchScenesByApplicationId(
+      this.props.match.params.id,
+      this.props.authToken
+    );
 
     this.setState({ scenes });
   }
@@ -115,3 +122,7 @@ export default class SceneListContainer extends React.Component<
     );
   }
 }
+
+export default connect(state => ({
+  authToken: state.auth.authToken,
+}))(SceneListContainer);

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ISection, ISortData } from './SceneContainer';
 import { SECTION_BUTTON, SECTION_LISTVIEW, SECTION_TEXT, SECTION_TEXTBOX } from '../../constants';
 import { SortableContainer, SortableElement, SortableHandle } from 'react-sortable-hoc';
-import { ChangeEvent } from 'react';
 
 interface ISectionsProps {
   sections: Array<ISection>;
@@ -41,10 +40,7 @@ const SortableItem = SortableElement(
   ({ value, handleSectionSelect, handleSectionRemove, selectedSection, i }) => (
     <div className="row">
       <div className="col-md-10">
-        <div
-          onClick={(e: ChangeEvent<HTMLInputElement>) => handleSectionSelect(i)}
-          style={sectionStyle(value, selectedSection, i)}
-        >
+        <div onClick={() => handleSectionSelect(i)} style={sectionStyle(value, selectedSection, i)}>
           <div>
             {value.type === SECTION_TEXT && (
               <div style={{ height: '35px', width: '100%' }}>

@@ -1,29 +1,38 @@
 import { API_BASE, API_SCENE_URI } from '../constants';
-import BaseApi from './BaseApi';
+import BaseSecuredApi from './BaseSecuredApi';
 import { IScene } from '../components/SceneList/SceneListContainer';
 
 export default class SceneApi {
-  static fetchScenesByApplicationId(applicationId: number): Array<IScene> {
-    return BaseApi.fetchDataByResourceId(API_SCENE_URI, applicationId);
+  static fetchScenesByApplicationId(applicationId: number, authToken: string): Array<IScene> {
+    return BaseSecuredApi.fetchDataByResourceId(API_SCENE_URI, applicationId, authToken);
   }
 
-  static fetchSceneById(sceneId: number): IScene {
-    return BaseApi.fetchDataByResourceId(`${API_BASE}scene`, sceneId);
+  static fetchSceneById(sceneId: number, authToken: string): IScene {
+    return BaseSecuredApi.fetchDataByResourceId(`${API_BASE}scene`, sceneId, authToken);
   }
 
-  static deleteScene(sceneId: number, onDataDeleted: () => void): void {
-    BaseApi.deleteDataByResourceId(API_SCENE_URI, sceneId, onDataDeleted);
+  static deleteScene(sceneId: number, onDataDeleted: () => void, authToken: string): void {
+    BaseSecuredApi.deleteDataByResourceId(API_SCENE_URI, sceneId, onDataDeleted, authToken);
   }
 
-  static updateScene(sceneId: number, data: IScene, onDataUpdated: () => void): void {
-    BaseApi.updateDataByResourceId(API_SCENE_URI, data, sceneId, onDataUpdated);
+  static updateScene(
+    sceneId: number,
+    data: IScene,
+    onDataUpdated: () => void,
+    authToken: string
+  ): void {
+    BaseSecuredApi.updateDataByResourceId(API_SCENE_URI, data, sceneId, onDataUpdated, authToken);
   }
 
-  static addScene(data: IScene, onDataPosted: () => void): void {
-    BaseApi.postData(API_SCENE_URI, data, onDataPosted);
+  static addScene(data: IScene, onDataPosted: () => void, authToken: string): void {
+    BaseSecuredApi.postData(API_SCENE_URI, data, onDataPosted, authToken);
   }
 
-  static fetchScenesForApplicationBySceneId(sceneId: number): Array<IScene> {
-    return BaseApi.fetchDataByResourceId(`${API_BASE}/scenes/scenes-to-appliacation`, sceneId);
+  static fetchScenesForApplicationBySceneId(sceneId: number, authToken: string): Array<IScene> {
+    return BaseSecuredApi.fetchDataByResourceId(
+      `${API_BASE}/scenes/scenes-to-appliacation`,
+      sceneId,
+      authToken
+    );
   }
 }

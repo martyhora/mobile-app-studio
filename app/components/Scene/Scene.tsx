@@ -6,6 +6,7 @@ import SectionsControl from './SectionsControl';
 import { IScene } from '../SceneList/SceneListContainer';
 import SectionsList from './SectionsList';
 import SceneListPreview from './SceneListPreview';
+import { ColorResult } from 'react-color';
 
 interface ISceneProps {
   addSection: (sectionId) => void;
@@ -21,7 +22,7 @@ interface ISceneProps {
   ) => void;
   handleSectionSelect: (sectionIndex: number) => void;
   handleSectionRemove: (sectionIndex: number) => void;
-  handleColorParameterChange: (sectionIndex: number, parameter: string, color: any) => void;
+  handleColorParameterChange: (sectionIndex: number, parameter: string, color: ColorResult) => void;
   handleSortChange: (indexes: ISortData) => void;
   saveScene: () => void;
 }
