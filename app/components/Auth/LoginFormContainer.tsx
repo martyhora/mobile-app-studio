@@ -2,7 +2,9 @@ import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
 import LoginForm from './LoginForm';
 import { loginUser } from '../../actions/auth';
-import { connect } from 'react-redux';
+import { connect, Dispatch } from 'react-redux';
+import { AppState } from '../../reducers/index';
+import { IAuthState } from '../../reducers/auth';
 
 interface ILoginFormContainerState {
   username: string;
@@ -56,12 +58,12 @@ class LoginFormContainer extends React.Component<
 }
 
 export default connect(
-  state => ({
+  (state: AppState) => ({
     errors: state.auth.errors,
     userAuthenticated: state.auth.authToken !== '',
     isAuthenticating: state.auth.isLoading,
   }),
-  dispatch => ({
+  (dispatch: Dispatch<IAuthState>) => ({
     loginUser: (username: string, password: string) => {
       dispatch(loginUser(username, password));
     },

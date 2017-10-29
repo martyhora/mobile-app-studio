@@ -9,15 +9,15 @@ export default class BaseSecuredApi {
     return BaseSecuredApi.fetchData(`${apiUri}/${resourceId}`, authToken);
   }
 
-  static async deleteData(apiUri: string, onDataDeleted: () => void, authToken: string): void {
-    BaseApi.deleteData(apiUri, onDataDeleted, authToken);
+  static async deleteData(apiUri: string, onDataDeleted: () => void, authToken: string) {
+    BaseApi.deleteData(apiUri, onDataDeleted, { Authorization: `Bearer ${authToken}` });
   }
 
   static deleteDataByResourceId(
     apiUrl: string,
     resourceId: number,
     onDataDeleted: () => void,
-    authToken
+    authToken: string
   ): void {
     BaseSecuredApi.deleteData(`${apiUrl}/${resourceId}`, onDataDeleted, authToken);
   }
@@ -27,7 +27,7 @@ export default class BaseSecuredApi {
     data: object,
     onDataUpdated: () => void,
     authToken: string
-  ): void {
+  ) {
     BaseApi.updateData(apiUri, data, onDataUpdated, { Authorization: `Bearer ${authToken}` });
   }
 
@@ -41,12 +41,7 @@ export default class BaseSecuredApi {
     BaseSecuredApi.updateData(`${apiUrl}/${resourceId}`, data, onDataUpdated, authToken);
   }
 
-  static async postData(
-    apiUri: string,
-    data: object,
-    onDataPosted: () => void,
-    authToken: string
-  ): void {
+  static async postData(apiUri: string, data: object, onDataPosted: () => void, authToken: string) {
     BaseApi.postData(apiUri, data, onDataPosted, { Authorization: `Bearer ${authToken}` });
   }
 }

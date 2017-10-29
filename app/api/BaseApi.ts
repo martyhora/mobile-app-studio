@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
 export default class BaseApi {
-  static async fetchData(apiUri: string, headers: object = {}): any {
+  static async fetchData(apiUri: string, headers: object = {}): Promise<any> {
     try {
       const response: AxiosResponse = await axios({
         method: 'get',
@@ -18,7 +18,7 @@ export default class BaseApi {
     return BaseApi.fetchData(`${apiUri}/${resourceId}`, headers);
   }
 
-  static async deleteData(apiUri: string, onDataDeleted: () => void, headers: object = {}): void {
+  static async deleteData(apiUri: string, onDataDeleted: () => void, headers: object = {}) {
     try {
       const response: AxiosResponse = await axios({
         method: 'delete',
@@ -48,7 +48,7 @@ export default class BaseApi {
     data: object,
     onDataUpdated: () => void,
     headers: object = {}
-  ): void {
+  ) {
     try {
       const response: AxiosResponse = await axios({
         method: 'put',
@@ -80,7 +80,7 @@ export default class BaseApi {
     data: object,
     onDataPosted: () => void,
     headers: object = {}
-  ): void {
+  ) {
     try {
       const response: AxiosResponse = await axios({
         method: 'post',

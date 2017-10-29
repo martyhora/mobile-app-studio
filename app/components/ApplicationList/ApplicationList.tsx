@@ -7,7 +7,6 @@ import { IScene } from '../SceneList/SceneListContainer';
 import ErrorList from '../ErrorList';
 
 interface IApplicationProps {
-  addApplication: () => void;
   application: IApplication;
   applications: Array<IApplication>;
   handleApplicationRemove: (applicationIndex: number, applicationId: number) => void;
@@ -27,7 +26,6 @@ interface IApplicationProps {
 }
 
 const ApplicationList = ({
-  addApplication,
   application,
   applications,
   handleApplicationRemove,
@@ -45,7 +43,6 @@ const ApplicationList = ({
     <div style={{ marginBottom: '20px' }}>
       <button
         className="btn btn-info"
-        onClick={addApplication}
         style={{ float: 'left' }}
         data-toggle="modal"
         data-target="#applicationModal"
@@ -116,7 +113,7 @@ const ApplicationList = ({
           {isLoading && (
             <tbody className="text-center">
               <tr>
-                <td colSpan="3">
+                <td colSpan={3}>
                   <span
                     className="glyphicon glyphicon-spin glyphicon-refresh text-primary"
                     style={{ fontSize: '20px' }}

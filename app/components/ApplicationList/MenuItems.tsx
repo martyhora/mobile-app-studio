@@ -14,7 +14,7 @@ interface IMenuItemsProps {
   handleMenuItemChange: (
     parameter: string,
     menuItemIndex: number,
-    e: ChangeEvent<HTMLInputElement>
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
   handleMenuItemRemove: (menuItemIndex: number) => void;
   handleMenuItemAdd: () => void;
@@ -62,7 +62,7 @@ const MenuItems = ({
     </tbody>
     <tfoot>
       <tr>
-        <td colSpan="2">
+        <td colSpan={2}>
           <button className="btn btn-info" onClick={handleMenuItemAdd}>
             Add item
           </button>

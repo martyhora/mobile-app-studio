@@ -45,10 +45,6 @@ class ApplicationListContainer extends React.Component<
     apiErrors: [],
   };
 
-  addApplication(): void {
-    this.setState({ isFormVisible: true });
-  }
-
   handleApplicationRemove(applicationIndex: number, applicationId: number): void {
     ApplicationApi.deleteApplication(
       applicationId,
@@ -139,7 +135,9 @@ class ApplicationListContainer extends React.Component<
         this.setState({ applications, isLoading: false });
       });
     } catch (error) {
-      this.setState({ errors: ['An error while fetching data occured, please try again later'] });
+      this.setState({
+        apiErrors: ['An error while fetching data occured, please try again later'],
+      });
     }
   }
 
@@ -173,7 +171,6 @@ class ApplicationListContainer extends React.Component<
         isLoading={this.state.isLoading}
         apiErrors={this.state.apiErrors}
         application={this.state.application}
-        addApplication={this.addApplication.bind(this)}
         handleApplicationRemove={this.handleApplicationRemove.bind(this)}
         handleApplicationSave={this.handleApplicationSave.bind(this)}
         handleParameterChange={this.handleParameterChange.bind(this)}
@@ -187,19 +184,6 @@ class ApplicationListContainer extends React.Component<
   }
 }
 
-export default connect(
-  state => ({
-    authToken: state.auth.authToken,
-    // applications: state.applications.data,
-    // isLoading: state.applications.isLoading,
-    // apiErrors: state.applications.apiErrors,
-  })
-  // dispatch => ({
-  //   fetchApplications: () => {
-  //     dispatch(fetchApplications());
-  //   },
-  //   addApplication: (application: IApplication) => {
-  //     dispatch(addApplication(application));
-  //   },
-  // })
-)(ApplicationListContainer);
+export default connect(state => ({
+  authToken: state.auth.authToken,
+}))(ApplicationListContainer);

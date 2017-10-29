@@ -24,7 +24,7 @@ export interface IApiAuthResponse extends IApiResponse {
 export class AuthError extends Error {}
 
 export default class AuthApi {
-  static async login(username: string, password: string): IApiAuthResponse {
+  static async login(username: string, password: string): Promise<IApiAuthResponse> {
     const response: AxiosResponse = await axios({
       method: 'post',
       url: API_AUTH_URI,

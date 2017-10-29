@@ -108,12 +108,12 @@ const SortableItem = SortableElement(
 const SortableList = SortableContainer(
   ({ items, handleSectionSelect, handleSectionRemove, selectedSection }) => (
     <div>
-      {items.map((value, i: number) => (
+      {items.map((section: ISection, i: number) => (
         <SortableItem
           key={`item-${i}`}
           i={i}
           index={i}
-          value={value}
+          value={section}
           handleSectionSelect={handleSectionSelect}
           handleSectionRemove={handleSectionRemove}
           selectedSection={selectedSection}

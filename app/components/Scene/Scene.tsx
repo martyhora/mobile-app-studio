@@ -9,7 +9,7 @@ import SceneListPreview from './SceneListPreview';
 import { ColorResult } from 'react-color';
 
 interface ISceneProps {
-  addSection: (sectionId) => void;
+  addSection: (sectionType: string) => void;
   sectionTitle: string;
   sections: Array<ISection>;
   selectedSection: number;

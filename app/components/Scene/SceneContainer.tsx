@@ -96,7 +96,7 @@ class SceneContainer extends React.Component<ISceneContainerProps, ISceneContain
 
     sections.push(section);
 
-    this.setState({ sections, newSection: '', sectionTitle: '' });
+    this.setState({ sections, sectionTitle: '' });
   }
 
   handleSectionSelect(sectionIndex: number): void {
