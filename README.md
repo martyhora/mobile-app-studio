@@ -4,6 +4,8 @@ Single page application written in React and using React Router serving as a vis
 
 To generate the mobile application source code you need to implement your own layer on backend to do that. How to implement the layer is described in the section below.
 
+![alt text](https://martyhora.cz/img/portfolio/thumbnails/1.png)
+
 # Generating the application source code
 
 The application itself does not come with an implementation for generating the mobile application source code. Instead you have to write your own implementation in PHP.
