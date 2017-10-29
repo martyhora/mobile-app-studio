@@ -1,8 +1,8 @@
 <?php
 
-namespace DbModel;
+namespace App\DbModel;
 
-class UserModel extends \DbLib\DbTableModel
+class UserModel extends DbTableModel
 {
     protected $tableName = 'user';
 

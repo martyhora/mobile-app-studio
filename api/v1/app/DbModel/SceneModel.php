@@ -1,8 +1,8 @@
 <?php
 
-namespace DbModel;
+namespace App\DbModel;
 
-class SceneModel extends \DbLib\DbTableModel
+class SceneModel extends DbTableModel
 {
     protected $tableName = 'scene';
 

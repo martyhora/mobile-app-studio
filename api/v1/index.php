@@ -1,11 +1,11 @@
 <?php
 
-use Authentication\JwtAuth;
-use Creator\ApplicationCreator;
-use DbModel\ApplicationModel;
-use DbModel\SceneModel;
-use DbModel\SectionModel;
-use DbModel\UserModel;
+use App\Authentication\JwtAuth;
+use App\Creator\ApplicationCreator;
+use App\DbModel\ApplicationModel;
+use App\DbModel\SceneModel;
+use App\DbModel\SectionModel;
+use App\DbModel\UserModel;
 use Medoo\Medoo;
 use Psr\Http\Message\ResponseInterface;
 use \Psr\Http\Message\ServerRequestInterface as Request;
@@ -14,7 +14,7 @@ use Psr\Http\Message\ServerRequestInterface;
 
 require 'vendor/autoload.php';
 
-if (!class_exists('Creator\ApplicationCreator')) {
+if (!class_exists('App\Creator\ApplicationCreator')) {
     header('Content-Type: application/json');
 
     echo json_encode(['error' => "Implementation of ApplicationCreator class must be provided. You can create a default implementation by copying ApplicationCreator.example.php file, renaming it to ApplicationCreator.php and renaming class in it to ApplicationCreator."]);

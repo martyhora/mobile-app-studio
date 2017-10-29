@@ -1,6 +1,6 @@
 <?php
 
-namespace Creator;
+namespace App\Creator;
 
 class ApplicationCreatorExample implements ICreator
 {

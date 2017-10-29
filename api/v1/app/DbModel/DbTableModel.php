@@ -1,6 +1,6 @@
 <?php
 
-namespace DbLib;
+namespace App\DbModel;
 
 use Medoo\Medoo;
 

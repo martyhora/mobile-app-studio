@@ -1,8 +1,8 @@
 <?php
 
-namespace DbModel;
+namespace App\DbModel;
 
-class SectionModel extends \DbLib\DbTableModel
+class SectionModel extends DbTableModel
 {
     protected $tableName = 'section';
 
