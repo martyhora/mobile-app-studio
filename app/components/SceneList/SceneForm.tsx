@@ -1,14 +1,16 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import { IScene } from './SceneListContainer';
+import ErrorList from '../ErrorList';
 
 interface ISceneProps {
   scene: IScene;
+  formErrors: Array<string>;
   handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
-  handleSceneSave: () => void;
+  handleSceneSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
 }
 
-const SceneForm = ({ scene, handleParameterChange, handleSceneSave }: ISceneProps) => (
+const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }: ISceneProps) => (
   <div id="sceneModal" className="modal fade" role="dialog">
     <div className="modal-dialog">
       <div className="modal-content">
@@ -18,8 +20,10 @@ const SceneForm = ({ scene, handleParameterChange, handleSceneSave }: ISceneProp
           </button>
           <h4 className="modal-title">Scene</h4>
         </div>
-        <div className="modal-body">
-          <form className="form-horizontal">
+        <form className="form-horizontal" onSubmit={handleSceneSave}>
+          <div className="modal-body">
+            <ErrorList errors={formErrors} />
+
             <div className="box-body">
               <div className="form-group">
                 <label htmlFor="inputScene" className="col-sm-2 control-label">
@@ -33,22 +37,21 @@ const SceneForm = ({ scene, handleParameterChange, handleSceneSave }: ISceneProp
                     id="inputScene"
                     placeholder="Title"
                     value={scene.title}
-                    onChange={e => handleParameterChange('title', e)}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                      handleParameterChange('title', e)}
                   />
                 </div>
               </div>
             </div>
-          </form>
-        </div>
-        <div className="box-footer">
-          <button
-            type="submit"
-            className={`btn btn-info pull-right ${scene.title === '' ? 'disabled' : ''}`}
-            onClick={handleSceneSave}
-          >
-            Save
-          </button>
-        </div>
+          </div>
+          <div className="box-footer">
+            <input
+              type="submit"
+              className={`btn btn-info pull-right ${scene.title === '' ? 'disabled' : ''}`}
+              value="Save"
+            />
+          </div>
+        </form>
       </div>
     </div>
   </div>

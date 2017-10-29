@@ -35,4 +35,15 @@ class ApplicationModel extends \DbLib\DbTableModel
 
         return parent::updateById($datas, $id);
     }
+
+    protected function validateData(array $data)
+    {
+        $errors = [];
+
+        if (empty($data['title']) || empty($data['apiBase'])) {
+            $errors[] = 'Please, fill in all form inputs';
+        }
+
+        return $errors;
+    }
 }

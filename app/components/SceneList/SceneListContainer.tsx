@@ -1,9 +1,10 @@
 import * as React from 'react';
 import SceneList from './SceneList';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import SceneApi from '../../api/SceneApi';
 import { ISection } from '../Scene/SceneContainer';
 import { connect } from 'react-redux';
+import { ApiSaveResponse } from '../../api/BaseApi';
 
 export interface IScene {
   id?: number;
@@ -15,6 +16,7 @@ export interface IScene {
 interface ISceneListContainerState {
   scenes: Array<IScene>;
   scene: IScene;
+  formErrors: Array<string>;
 }
 
 interface ISceneListContainerProps {
@@ -40,6 +42,7 @@ class SceneListContainer extends React.Component<
   state: ISceneListContainerState = {
     scenes: [],
     scene: defaultScene,
+    formErrors: [],
   };
 
   handleParameterChange(parameter: string, e: ChangeEvent<HTMLInputElement>): void {
@@ -51,33 +54,40 @@ class SceneListContainer extends React.Component<
   }
 
   async handleSceneEdit(sceneId: number) {
-    const scene = await SceneApi.fetchSceneById(sceneId, this.props.authToken);
+    const scene: IScene = await SceneApi.fetchSceneById(sceneId, this.props.authToken);
 
     this.setState({ scene });
   }
 
-  handleSceneSave(): void {
+  async handleSceneSave(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     const { title, id } = this.state.scene;
 
     if (title === '') {
       return;
     }
 
-    const onSectionSaved = (): void => {
-      this.setState({ scene: defaultScene });
-
-      this.fetchScenes();
-    };
+    let responseData: ApiSaveResponse = null;
 
     if (!id) {
-      SceneApi.addScene(
+      responseData = await SceneApi.addScene(
         { title, applicationId: this.props.match.params.id, sections: [] },
-        onSectionSaved,
         this.props.authToken
       );
     } else {
-      SceneApi.updateScene(id, this.state.scene, onSectionSaved, this.props.authToken);
+      responseData = await SceneApi.updateScene(id, this.state.scene, this.props.authToken);
     }
+
+    if (responseData.success === false) {
+      this.setState({ formErrors: responseData.errors });
+
+      return;
+    }
+
+    this.setState({ scene: defaultScene });
+
+    this.fetchScenes();
 
     $('#sceneModal').modal('toggle');
   }
@@ -97,7 +107,7 @@ class SceneListContainer extends React.Component<
   }
 
   async fetchScenes() {
-    const scenes = await SceneApi.fetchScenesByApplicationId(
+    const scenes: Array<IScene> = await SceneApi.fetchScenesByApplicationId(
       this.props.match.params.id,
       this.props.authToken
     );
@@ -114,6 +124,7 @@ class SceneListContainer extends React.Component<
       <SceneList
         scenes={this.state.scenes}
         scene={this.state.scene}
+        formErrors={this.state.formErrors}
         handleParameterChange={this.handleParameterChange.bind(this)}
         handleSceneRemove={this.handleSceneRemove.bind(this)}
         handleSceneSave={this.handleSceneSave.bind(this)}

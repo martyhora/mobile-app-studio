@@ -1,27 +1,26 @@
 import { API_APPLICATION_URI } from '../constants';
 import BaseSecuredApi from './BaseSecuredApi';
 import { IApplication } from '../components/ApplicationList/ApplicationListContainer';
+import { ApiSaveResponse } from './BaseApi';
 
 export default class ApplicationApi {
-  static fetchApplications(authToken: string): Array<IApplication> {
+  static fetchApplications(authToken: string): Promise<Array<IApplication>> {
     return BaseSecuredApi.fetchData(API_APPLICATION_URI, authToken);
   }
 
-  static fetchApplicationById(applicationId: number, authToken: string): IApplication {
+  static fetchApplicationById(applicationId: number, authToken: string): Promise<IApplication> {
     return BaseSecuredApi.fetchDataByResourceId(API_APPLICATION_URI, applicationId, authToken);
   }
 
   static updateApplication(
     applicationId: number,
     data: IApplication,
-    onDataUpdated: () => void,
     authToken: string
-  ): void {
-    BaseSecuredApi.updateDataByResourceId(
+  ): Promise<ApiSaveResponse> {
+    return BaseSecuredApi.updateDataByResourceId(
       API_APPLICATION_URI,
       data,
       applicationId,
-      onDataUpdated,
       authToken
     );
   }
@@ -39,7 +38,7 @@ export default class ApplicationApi {
     );
   }
 
-  static addApplication(data: IApplication, onDataPosted: () => void, authToken: string): void {
-    BaseSecuredApi.postData(API_APPLICATION_URI, data, onDataPosted, authToken);
+  static addApplication(data: IApplication, authToken: string): Promise<ApiSaveResponse> {
+    return BaseSecuredApi.postData(API_APPLICATION_URI, data, authToken);
   }
 }

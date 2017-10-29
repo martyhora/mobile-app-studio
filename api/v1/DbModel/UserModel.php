@@ -16,4 +16,8 @@ class UserModel extends \DbLib\DbTableModel
 
         return $user;
     }
+
+    protected function validateData(array $data)
+    {
+    }
 }

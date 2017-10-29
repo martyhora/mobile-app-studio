@@ -51,4 +51,28 @@ abstract class DbTableModel
     {
         return $this->database->delete($this->tableName, $where);
     }
+
+    public function save(array $data, $id = null)
+    {
+        if ($id === null) {
+            return $this->insert($data);
+        }
+
+        return $this->updateById($data, $id);
+    }
+
+    public function saveForm(array $data, $id = null)
+    {
+        $errors = $this->validateData($data);
+
+        if (count($errors) > 0) {
+            return $errors;
+        }
+
+        $this->save($data, $id);
+
+        return [];
+    }
+
+    abstract protected function validateData(array $data);
 }

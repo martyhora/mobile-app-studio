@@ -1,11 +1,15 @@
-import BaseApi from './BaseApi';
+import BaseApi, { ApiSaveResponse } from './BaseApi';
 
 export default class BaseSecuredApi {
-  static fetchData(apiUri: string, authToken: string): any {
+  static fetchData(apiUri: string, authToken: string): Promise<any> {
     return BaseApi.fetchData(apiUri, { Authorization: `Bearer ${authToken}` });
   }
 
-  static fetchDataByResourceId(apiUri: string, resourceId: number, authToken: string): any {
+  static fetchDataByResourceId(
+    apiUri: string,
+    resourceId: number,
+    authToken: string
+  ): Promise<any> {
     return BaseSecuredApi.fetchData(`${apiUri}/${resourceId}`, authToken);
   }
 
@@ -18,30 +22,28 @@ export default class BaseSecuredApi {
     resourceId: number,
     onDataDeleted: () => void,
     authToken: string
-  ): void {
+  ) {
     BaseSecuredApi.deleteData(`${apiUrl}/${resourceId}`, onDataDeleted, authToken);
   }
 
   static async updateData(
     apiUri: string,
     data: object,
-    onDataUpdated: () => void,
     authToken: string
-  ) {
-    BaseApi.updateData(apiUri, data, onDataUpdated, { Authorization: `Bearer ${authToken}` });
+  ): Promise<ApiSaveResponse> {
+    return BaseApi.updateData(apiUri, data, { Authorization: `Bearer ${authToken}` });
   }
 
   static updateDataByResourceId(
     apiUrl: string,
     data: object,
     resourceId: number,
-    onDataUpdated: () => void,
     authToken: string
-  ): void {
-    BaseSecuredApi.updateData(`${apiUrl}/${resourceId}`, data, onDataUpdated, authToken);
+  ): Promise<ApiSaveResponse> {
+    return BaseSecuredApi.updateData(`${apiUrl}/${resourceId}`, data, authToken);
   }
 
-  static async postData(apiUri: string, data: object, onDataPosted: () => void, authToken: string) {
-    BaseApi.postData(apiUri, data, onDataPosted, { Authorization: `Bearer ${authToken}` });
+  static postData(apiUri: string, data: object, authToken: string): Promise<ApiSaveResponse> {
+    return BaseApi.postData(apiUri, data, { Authorization: `Bearer ${authToken}` });
   }
 }

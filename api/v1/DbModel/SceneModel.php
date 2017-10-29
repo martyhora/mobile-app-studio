@@ -71,4 +71,15 @@ class SceneModel extends \DbLib\DbTableModel
     {
         return parent::update($datas, $where);
     }
+
+    protected function validateData(array $data)
+    {
+        $errors = [];
+
+        if (empty($data['title'])) {
+            $errors[] = 'Please, fill in all form inputs';
+        }
+
+        return $errors;
+    }
 }

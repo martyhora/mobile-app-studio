@@ -140,18 +140,16 @@ class SceneContainer extends React.Component<ISceneContainerProps, ISceneContain
   }
 
   saveScene() {
-    SectionApi.updateSection(
-      this.state.sections,
-      this.props.match.params.id,
-      () => {},
-      this.props.authToken
-    );
+    SectionApi.updateSection(this.state.sections, this.props.match.params.id, this.props.authToken);
   }
 
   async fetchData(sceneId: number) {
-    const sections = await SectionApi.fetchSections(sceneId, this.props.authToken);
+    const sections: Array<ISection> = await SectionApi.fetchSections(sceneId, this.props.authToken);
 
-    const scenes = await SceneApi.fetchScenesForApplicationBySceneId(sceneId, this.props.authToken);
+    const scenes: Array<IScene> = await SceneApi.fetchScenesForApplicationBySceneId(
+      sceneId,
+      this.props.authToken
+    );
 
     this.setState({ sections, scenes });
   }

@@ -16,4 +16,8 @@ class SectionModel extends \DbLib\DbTableModel
 
         return $rows;
     }
+
+    protected function validateData(array $data)
+    {
+    }
 }

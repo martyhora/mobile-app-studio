@@ -71,7 +71,11 @@ $app->get('/scenes/scenes-to-appliacation/{sceneId}', function (Request $request
 $app->post('/scenes', function (Request $request, Response $response) use ($app, $sceneModel) {
     $data = $request->getParsedBody();
 
-    $sceneModel->insert($data);
+    $errors = $sceneModel->saveForm($data);
+
+    if (count($errors) > 0) {
+        return $response->withJson(['success' => false, 'errors' => $errors]);
+    }
 
     return $response->withJson(['success' => true]);
 });
@@ -79,7 +83,11 @@ $app->post('/scenes', function (Request $request, Response $response) use ($app,
 $app->put('/scenes/{sceneId}', function (Request $request, Response $response, $args) use ($sceneModel) {
     $data = $request->getParsedBody();
 
-    $sceneModel->updateById($data, $args['sceneId']);
+    $errors = $sceneModel->saveForm($data, $args['sceneId']);
+
+    if (count($errors) > 0) {
+        return $response->withJson(['success' => false, 'errors' => $errors]);
+    }
 
     return $response->withJson(['success' => true]);
 });
@@ -121,7 +129,11 @@ $app->post('/applications', function (Request $request, Response $response) use 
 
     unset($data['id']);
 
-    $applicationModel->insert($data);
+    $errors = $applicationModel->saveForm($data);
+
+    if (count($errors) > 0) {
+        return $response->withJson(['success' => false, 'errors' => $errors]);
+    }
 
     return $response->withJson(['success' => true]);
 });
@@ -129,7 +141,11 @@ $app->post('/applications', function (Request $request, Response $response) use 
 $app->put('/applications/{applicationId}', function (Request $request, Response $response, $args) use ($applicationModel) {
     $data = $request->getParsedBody();
 
-    $applicationModel->updateById($data, $args['applicationId']);
+    $errors = $applicationModel->saveForm($data, $args['applicationId']);
+
+    if (count($errors) > 0) {
+        return $response->withJson(['success' => false, 'errors' => $errors]);
+    }
 
     return $response->withJson(['success' => true]);
 });

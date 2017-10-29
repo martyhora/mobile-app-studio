@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import { IApplication } from './ApplicationListContainer';
 import { Link } from 'react-router-dom';
 import ApplicationForm from './ApplicationForm';
@@ -17,12 +17,13 @@ interface IApplicationProps {
     e: ChangeEvent<HTMLInputElement>
   ) => void;
   handleMenuItemAdd: () => void;
-  handleApplicationSave: () => void;
+  handleApplicationSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   handleMenuItemRemove: (menuItemIndex: number) => void;
   handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
   scenes: Array<IScene>;
   isLoading: boolean;
   apiErrors: Array<string>;
+  formErrors: Array<string>;
 }
 
 const ApplicationList = ({
@@ -38,6 +39,7 @@ const ApplicationList = ({
   scenes,
   isLoading,
   apiErrors,
+  formErrors,
 }: IApplicationProps) => (
   <div>
     <div style={{ marginBottom: '20px' }}>
@@ -129,6 +131,7 @@ const ApplicationList = ({
     <ApplicationForm
       application={application}
       scenes={scenes}
+      formErrors={formErrors}
       handleApplicationSave={handleApplicationSave}
       handleParameterChange={handleParameterChange}
       handleMenuItemChange={handleMenuItemChange}

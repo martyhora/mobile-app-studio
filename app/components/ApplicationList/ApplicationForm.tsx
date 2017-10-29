@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import { IApplication } from './ApplicationListContainer';
 import MenuItems from './MenuItems';
 import { IScene } from '../SceneList/SceneListContainer';
+import ErrorList from '../ErrorList';
 
 interface IApplicationProps {
   application: IApplication;
@@ -12,10 +13,11 @@ interface IApplicationProps {
     menuItemIndex: number,
     e: ChangeEvent<HTMLInputElement>
   ) => void;
-  handleApplicationSave: () => void;
+  handleApplicationSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
   handleMenuItemAdd: () => void;
   handleMenuItemRemove: (menuItemIndex: number) => void;
   scenes: Array<IScene>;
+  formErrors: Array<string>;
 }
 
 const ApplicationForm = ({
@@ -26,6 +28,7 @@ const ApplicationForm = ({
   handleMenuItemAdd,
   handleMenuItemRemove,
   scenes,
+  formErrors,
 }: IApplicationProps) => (
   <div id="applicationModal" className="modal fade" role="dialog">
     <div className="modal-dialog">
@@ -36,8 +39,10 @@ const ApplicationForm = ({
           </button>
           <h4 className="modal-title">Application</h4>
         </div>
-        <div className="modal-body">
-          <form className="form-horizontal">
+        <form className="form-horizontal" onSubmit={handleApplicationSave}>
+          <div className="modal-body">
+            <ErrorList errors={formErrors} />
+
             <div className="box-body">
               <div className="form-group">
                 <label htmlFor="inputApplication" className="col-sm-2 control-label">
@@ -94,20 +99,18 @@ const ApplicationForm = ({
                 </div>
               </div>
             )}
-          </form>
-        </div>
-        <div className="box-footer">
-          <button
-            type="submit"
-            className={`btn btn-info pull-right ${application.title === '' ||
-            application.apiBase === ''
-              ? 'disabled'
-              : ''}`}
-            onClick={handleApplicationSave}
-          >
-            Save
-          </button>
-        </div>
+          </div>
+          <div className="box-footer">
+            <input
+              type="submit"
+              className={`btn btn-info pull-right ${application.title === '' ||
+              application.apiBase === ''
+                ? 'disabled'
+                : ''}`}
+              value="Save"
+            />
+          </div>
+        </form>
       </div>
     </div>
   </div>

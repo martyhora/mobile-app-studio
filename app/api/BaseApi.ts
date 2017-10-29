@@ -1,5 +1,10 @@
 import axios, { AxiosResponse } from 'axios';
 
+export interface ApiSaveResponse {
+  success: boolean;
+  errors?: Array<string>;
+}
+
 export default class BaseApi {
   static async fetchData(apiUri: string, headers: object = {}): Promise<any> {
     try {
@@ -8,6 +13,7 @@ export default class BaseApi {
         url: apiUri,
         headers,
       });
+
       return response.data;
     } catch (error) {
       console.log(error);
@@ -46,9 +52,8 @@ export default class BaseApi {
   static async updateData(
     apiUri: string,
     data: object,
-    onDataUpdated: () => void,
     headers: object = {}
-  ) {
+  ): Promise<ApiSaveResponse> {
     try {
       const response: AxiosResponse = await axios({
         method: 'put',
@@ -57,9 +62,7 @@ export default class BaseApi {
         data,
       });
 
-      if (response.data.success) {
-        onDataUpdated();
-      }
+      return response.data;
     } catch (error) {
       console.log(error);
     }
@@ -69,18 +72,16 @@ export default class BaseApi {
     apiUrl: string,
     data: object,
     resourceId: number,
-    onDataUpdated: () => void,
     headers: object = {}
-  ): void {
-    BaseApi.updateData(`${apiUrl}/${resourceId}`, data, onDataUpdated, headers);
+  ): Promise<ApiSaveResponse> {
+    return BaseApi.updateData(`${apiUrl}/${resourceId}`, data, headers);
   }
 
   static async postData(
     apiUri: string,
     data: object,
-    onDataPosted: () => void,
     headers: object = {}
-  ) {
+  ): Promise<ApiSaveResponse> {
     try {
       const response: AxiosResponse = await axios({
         method: 'post',
@@ -89,9 +90,7 @@ export default class BaseApi {
         data,
       });
 
-      if (response.data.success) {
-        onDataPosted();
-      }
+      return response.data;
     } catch (error) {
       console.log(error);
     }

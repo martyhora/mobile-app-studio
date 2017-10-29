@@ -1,11 +1,12 @@
 import * as React from 'react';
 import ApplicationList from './ApplicationList';
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FormEvent } from 'react';
 import ApplicationApi from '../../api/ApplicationApi';
 import { IMenuItem } from './MenuItems';
 import { IScene } from '../SceneList/SceneListContainer';
 import SceneApi from '../../api/SceneApi';
 import { connect } from 'react-redux';
+import { ApiSaveResponse } from '../../api/BaseApi';
 
 export interface IApplication {
   id?: number;
@@ -17,6 +18,7 @@ export interface IApplication {
 interface IApplicationListContainerState {
   isLoading: boolean;
   apiErrors: Array<string>;
+  formErrors: Array<string>;
   applications: Array<IApplication>;
   application: IApplication;
   scenes: Array<IScene>;
@@ -43,6 +45,7 @@ class ApplicationListContainer extends React.Component<
     scenes: [],
     isLoading: false,
     apiErrors: [],
+    formErrors: [],
   };
 
   handleApplicationRemove(applicationIndex: number, applicationId: number): void {
@@ -70,39 +73,39 @@ class ApplicationListContainer extends React.Component<
     this.setState({ application, scenes });
   }
 
-  handleApplicationSave(): void {
+  async handleApplicationSave(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     const { title, apiBase, id } = this.state.application;
 
     if (title === '' || apiBase === '') {
       return;
     }
 
+    let responseData: ApiSaveResponse = null;
+
     if (!id) {
-      ApplicationApi.addApplication(
+      responseData = await ApplicationApi.addApplication(
         this.state.application,
-        () => {
-          let applications: Array<IApplication> = this.state.applications;
-
-          let application: IApplication = this.state.application;
-
-          applications.push(application);
-
-          this.setState({ applications, application: defaultApplication });
-        },
         this.props.authToken
       );
     } else {
-      ApplicationApi.updateApplication(
+      responseData = await ApplicationApi.updateApplication(
         id,
         this.state.application,
-        () => {
-          this.setState({ application: defaultApplication });
-
-          this.fetchApplications();
-        },
         this.props.authToken
       );
     }
+
+    if (responseData.success === false) {
+      this.setState({ formErrors: responseData.errors });
+
+      return;
+    }
+
+    this.setState({ application: defaultApplication });
+
+    this.fetchApplications();
 
     $('#applicationModal').modal('toggle');
   }
@@ -170,6 +173,7 @@ class ApplicationListContainer extends React.Component<
         applications={this.state.applications}
         isLoading={this.state.isLoading}
         apiErrors={this.state.apiErrors}
+        formErrors={this.state.formErrors}
         application={this.state.application}
         handleApplicationRemove={this.handleApplicationRemove.bind(this)}
         handleApplicationSave={this.handleApplicationSave.bind(this)}
