@@ -4,6 +4,7 @@ import { IScene } from '../SceneList/SceneListContainer';
 import SelectBox from '../SelectBox';
 
 export interface IMenuItem {
+  [key: string]: string;
   title: string;
   sceneTitle: string;
 }

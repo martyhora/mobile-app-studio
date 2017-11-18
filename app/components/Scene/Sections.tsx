@@ -36,48 +36,65 @@ const DragHandle = SortableHandle(() => (
   />
 ));
 
+interface ISortableElementProps {
+  section: ISection;
+  handleSectionSelect: (index: number) => void;
+  handleSectionRemove: (index: number) => void;
+  selectedSection: number;
+  index: number;
+}
+
 const SortableItem = SortableElement(
-  ({ value, handleSectionSelect, handleSectionRemove, selectedSection, i }) => (
+  ({
+    section,
+    handleSectionSelect,
+    handleSectionRemove,
+    selectedSection,
+    index,
+  }: ISortableElementProps) => (
     <div className="row">
       <div className="col-md-10">
-        <div onClick={() => handleSectionSelect(i)} style={sectionStyle(value, selectedSection, i)}>
+        <div
+          onClick={() => handleSectionSelect(index)}
+          style={sectionStyle(section, selectedSection, index)}
+        >
           <div>
-            {value.type === SECTION_TEXT && (
+            {section.type === SECTION_TEXT && (
               <div style={{ height: '35px', width: '100%' }}>
                 <span
                   style={{
-                    color: value.color,
-                    fontSize: `${value.fontSize}px`,
+                    color: section.color,
+                    fontSize: `${section.fontSize}px`,
                   }}
                 >
-                  {value.caption}
+                  {section.caption}
                 </span>
               </div>
             )}
 
-            {value.type === SECTION_TEXTBOX && (
+            {section.type === SECTION_TEXTBOX && (
               <div>
                 <input type="text" disabled className="form-control" />
               </div>
             )}
 
-            {value.type === SECTION_BUTTON && (
+            {section.type === SECTION_BUTTON && (
               <div>
                 <button
                   className="btn btn-info btn-flat"
                   style={{
                     width: '100%',
                     fontWeight: 'bold',
-                    backgroundColor: value.backgroundColor,
+                    backgroundColor: section.backgroundColor,
                     border: 0,
                   }}
                 >
-                  {value.caption}
+                  {section.caption}
                 </button>
               </div>
             )}
 
-            {value.type === SECTION_LISTVIEW && (
+            {section.type === SECTION_LISTVIEW && (
               <div>
                 <span className="glyphicon glyphicon-list" style={{ fontSize: '20px' }} />
               </div>
@@ -98,22 +115,28 @@ const SortableItem = SortableElement(
             marginLeft: '-20px',
             marginTop: '8px',
           }}
-          onClick={() => handleSectionRemove(i)}
+          onClick={() => handleSectionRemove(index)}
         />
       </div>
     </div>
   )
 );
 
+interface ISortableList {
+  sections: Array<ISection>;
+  handleSectionSelect: (index: number) => void;
+  handleSectionRemove: (index: number) => void;
+  selectedSection: number;
+}
+
 const SortableList = SortableContainer(
-  ({ items, handleSectionSelect, handleSectionRemove, selectedSection }) => (
+  ({ sections, handleSectionSelect, handleSectionRemove, selectedSection }: ISortableList) => (
     <div>
-      {items.map((section: ISection, i: number) => (
+      {sections.map((section: ISection, i: number) => (
         <SortableItem
           key={`item-${i}`}
-          i={i}
           index={i}
-          value={section}
+          section={section}
           handleSectionSelect={handleSectionSelect}
           handleSectionRemove={handleSectionRemove}
           selectedSection={selectedSection}
@@ -134,7 +157,7 @@ const Sections = ({
     <div className="box-body">
       <SortableList
         useDragHandle={true}
-        items={sections}
+        sections={sections}
         onSortEnd={handleSortChange}
         handleSectionSelect={handleSectionSelect}
         selectedSection={selectedSection}

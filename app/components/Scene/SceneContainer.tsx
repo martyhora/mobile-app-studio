@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { ColorResult } from 'react-color';
 
 export interface ISection {
+  [key: string]: any;
   title: string;
   type: string;
   marginTop: number;

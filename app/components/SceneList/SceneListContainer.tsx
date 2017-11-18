@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { ApiSaveResponse } from '../../api/BaseApi';
 
 export interface IScene {
+  [key: string]: any;
   id?: number;
   applicationId?: number;
   title: string;

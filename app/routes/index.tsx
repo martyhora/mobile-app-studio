@@ -1,9 +1,14 @@
 import * as React from 'react';
-import { Redirect } from 'react-router';
+import { Redirect, RouteProps } from 'react-router';
 import { Route } from 'react-router-dom';
 import LoginFormContainer from '../components/Auth/LoginFormContainer';
+import { Component } from 'react';
 
-export const SecuredRoute = ({ component: Component, ...routerParameters }) => (
+interface SecuredRouteProps extends RouteProps {
+  userAuthenticated: boolean;
+}
+
+export const SecuredRoute = ({ component: Component, ...routerParameters }: SecuredRouteProps) => (
   <Route
     {...routerParameters}
     render={(props: any) =>

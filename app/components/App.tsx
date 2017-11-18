@@ -9,6 +9,8 @@ import { SecuredRoute, LoginRoute } from '../routes';
 import history from '../history';
 import { logoutUser } from '../actions/auth';
 import { IUser } from '../api/AuthApi';
+import { AppState } from '../reducers/index';
+import { Dispatch } from 'redux';
 
 interface AppProps {
   userAuthenticated: boolean;
@@ -95,20 +97,17 @@ const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
           <LoginRoute path="/login" userAuthenticated={userAuthenticated} />
 
           <SecuredRoute
-            name="application-list"
             path="/"
             exact
             component={ApplicationListContainer}
             userAuthenticated={userAuthenticated}
           />
           <SecuredRoute
-            name="scene"
             path="/scene/:id"
             component={SceneContainer}
             userAuthenticated={userAuthenticated}
           />
           <SecuredRoute
-            name="scene-list"
             path="/scene-list/:id"
             component={SceneListContainer}
             userAuthenticated={userAuthenticated}
@@ -130,11 +129,11 @@ const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
 );
 
 export default connect(
-  state => ({
+  (state: AppState) => ({
     userAuthenticated: state.auth.authToken !== '',
     user: state.auth.user !== null ? state.auth.user : {},
   }),
-  dispatch => ({
+  (dispatch: Dispatch<AppState>) => ({
     logoutUser: () => {
       dispatch(logoutUser());
     },

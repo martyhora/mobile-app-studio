@@ -116,7 +116,7 @@ const setUser: ActionCreator<SetUserAction> = (user: IUser): SetUserAction => ({
 export const setLoggedUser: ActionCreator<
   ThunkAction<Promise<void>, AppState, {}>
 > = (): ThunkAction<Promise<void>, AppState, {}> => async (
-  dispatch: Dispatch<IAuthState>,
+  dispatch: Dispatch<AppState>,
   getState: () => AppState
 ): Promise<void> => {
   const authToken: string = getState().auth.authToken;

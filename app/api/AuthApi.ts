@@ -38,7 +38,7 @@ export default class AuthApi {
     return response.data;
   }
 
-  static async fetchUser(authToken: string): IUserApiResponse {
+  static async fetchUser(authToken: string): Promise<IUserApiResponse> {
     const response: AxiosResponse = await axios({
       method: 'get',
       url: `${API_BASE}/user`,

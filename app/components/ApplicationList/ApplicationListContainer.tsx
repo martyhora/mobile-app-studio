@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { ApiSaveResponse } from '../../api/BaseApi';
 
 export interface IApplication {
+  [key: string]: any;
   id?: number;
   title: string;
   apiBase: string;
@@ -28,7 +29,7 @@ interface IApplicationListContainerProps {
   authToken: string;
 }
 
-const defaultApplication = {
+const defaultApplication: IApplication = {
   id: null,
   title: '',
   apiBase: '',
@@ -39,7 +40,7 @@ class ApplicationListContainer extends React.Component<
   IApplicationListContainerProps,
   IApplicationListContainerState
 > {
-  state = {
+  state: IApplicationListContainerState = {
     applications: [],
     application: defaultApplication,
     scenes: [],
