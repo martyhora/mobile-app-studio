@@ -4,6 +4,8 @@
   "description": "Drag and drop application for creating mobile appliactions with GUI.",
   "main": "index.html",
   "scripts": {
+    "start": "webpack --config webpack.dev.js --watch --progress --colors",
+    "build": "webpack --config webpack.prod.js --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Martin Hora",
