@@ -6,11 +6,24 @@
   version "4.6.0"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.6.0.tgz#093d67ed780d889c9543f6dca24ebee0b6b9fc45"
 
+"@types/react-color@^2.13.3":
+  version "2.13.4"
+  resolved "https://registry.yarnpkg.com/@types/react-color/-/react-color-2.13.4.tgz#0b89850fc5d2eee42e40910c48cf21215dec8f09"
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-dom@^15.5.1":
   version "15.5.1"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-15.5.1.tgz#f3c3e14c682785923c7d64583537df319442dec1"
   dependencies:
     "@types/react" "*"
+
+"@types/react-redux@^5.0.12":
+  version "5.0.15"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-5.0.15.tgz#420af2c702ac7aab321cf45bb7d3cb2503dd24d5"
+  dependencies:
+    "@types/react" "*"
+    redux "^3.6.0"
 
 "@types/react-router-dom@^4.0.5":
   version "4.0.6"
@@ -25,6 +38,19 @@
   resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-4.0.13.tgz#60f11e4d224ada222d488244a0cca30079abf8bb"
   dependencies:
     "@types/history" "*"
+    "@types/react" "*"
+
+"@types/react-router@^4.0.16":
+  version "4.0.22"
+  resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-4.0.22.tgz#2b97336eddfdf5886973539539b8ce7037cf629b"
+  dependencies:
+    "@types/history" "*"
+    "@types/react" "*"
+
+"@types/react-sortable-hoc@^0.6.0":
+  version "0.6.2"
+  resolved "https://registry.yarnpkg.com/@types/react-sortable-hoc/-/react-sortable-hoc-0.6.2.tgz#ae981fdb3ebe4f5df326586176bd7d874d70de76"
+  dependencies:
     "@types/react" "*"
 
 "@types/react@*", "@types/react@^15.0.31":
@@ -2759,7 +2785,7 @@ redux-thunk@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.2.0.tgz#e615a16e16b47a19a515766133d1e3e99b7852e5"
 
-redux@^3.7.2:
+redux@^3.6.0, redux@^3.7.2:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/redux/-/redux-3.7.2.tgz#06b73123215901d25d065be342eb026bc1c8537b"
   dependencies:
