@@ -13,3 +13,5 @@ export const SECTION_LISTVIEW = 'listView';
 export const SECTION_IMAGE = 'image';
 
 export const AUTH_TOKEN_KEY = 'authToken';
+
+export const APP_TITLE = 'Mobile App Studio';

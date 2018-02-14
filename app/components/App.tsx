@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { Router, Route, Link } from 'react-router-dom';
+import { Link, Router } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import ApplicationListContainer from './ApplicationList/ApplicationListContainer';
 import SceneContainer from './Scene/SceneContainer';
 import SceneListContainer from './SceneList/SceneListContainer';
-import { SecuredRoute, LoginRoute } from '../routes';
+import { LoginRoute, SecuredRoute } from '../routes';
 import history from '../history';
 import { logoutUser } from '../actions/auth';
 import { IUser } from '../api/AuthApi';
 import { AppState } from '../reducers/index';
 import { Dispatch } from 'redux';
+import { APP_TITLE } from '../constants';
 
 interface AppProps {
   userAuthenticated: boolean;
@@ -25,11 +26,11 @@ const App = ({ userAuthenticated, logoutUser, user }: AppProps) => (
         <header className="main-header">
           <a href="" className="logo">
             <span className="logo-mini">
-              <b>Mobile App</b> Studio
+              <b>{APP_TITLE}</b>
             </span>
 
             <span className="logo-lg">
-              <b>Mobile App</b> Studio
+              <b>{APP_TITLE}</b>
             </span>
           </a>
 

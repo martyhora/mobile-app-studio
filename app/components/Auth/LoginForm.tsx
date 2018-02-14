@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ChangeEvent, FormEvent } from 'react';
 import ErrorList from '../ErrorList';
+import { APP_TITLE } from '../../constants';
 
 interface ILoginFormProps {
   username: string;
@@ -24,7 +25,7 @@ const LoginForm = ({
   <div className="login-box">
     <div className="login-logo">
       <a href="">
-        <b>Mobile App</b> Studio
+        <b>{APP_TITLE}</b>
       </a>
     </div>
     <form action="" onSubmit={handleLoginSubmit}>
