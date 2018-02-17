@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { ChangeEvent } from 'react';
 import { IScene } from '../SceneList/SceneListContainer';
-import SelectBox from '../SelectBox';
+import { Field } from 'redux-form';
+import { WrappedFieldArrayProps } from 'redux-form/lib/FieldArray';
 
 export interface IMenuItem {
   [key: string]: string;
@@ -10,52 +10,38 @@ export interface IMenuItem {
 }
 
 interface IMenuItemsProps {
-  menuItems: Array<IMenuItem>;
   scenes: Array<IScene>;
-  handleMenuItemChange: (
-    parameter: string,
-    menuItemIndex: number,
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => void;
-  handleMenuItemRemove: (menuItemIndex: number) => void;
-  handleMenuItemAdd: () => void;
 }
 
-const MenuItems = ({
-  menuItems,
-  scenes,
-  handleMenuItemChange,
-  handleMenuItemRemove,
-  handleMenuItemAdd,
-}: IMenuItemsProps) => (
+const MenuItems = ({ scenes, fields }: IMenuItemsProps & WrappedFieldArrayProps<IMenuItem>) => (
   <table className="table">
     <tbody>
-      {menuItems.map((menuItem: IMenuItem, i: number) => (
+      {fields.map((menuItem, i: number) => (
         <tr key={i}>
           <td>
-            <input
+            <Field
+              name={`${menuItem}.title`}
+              component="input"
               type="text"
-              value={menuItem.title}
-              onChange={e => handleMenuItemChange('title', i, e)}
               className="form-control"
             />
           </td>
           <td>
-            <SelectBox
-              value={menuItem.sceneTitle}
-              prompt="- Select -"
-              onChange={e => handleMenuItemChange('sceneTitle', i, e)}
-              options={scenes.map((scene: IScene) => {
-                return { id: scene.title, name: scene.title };
-              })}
-            />
+            <Field name={`${menuItem}.sceneTitle`} component="select" className="form-control">
+              <option value="">- Select- </option>
+              {scenes.map(scene => (
+                <option key={`menuItem-scene-${scene.id}`} value={scene.title}>
+                  {scene.title}
+                </option>
+              ))}
+            </Field>
           </td>
           <td>
             <span
               className="glyphicon glyphicon-remove"
               title="Remove item"
               style={{ cursor: 'pointer', fontSize: '20px' }}
-              onClick={() => handleMenuItemRemove(i)}
+              onClick={() => fields.remove(i)}
             />
           </td>
         </tr>
@@ -64,7 +50,13 @@ const MenuItems = ({
     <tfoot>
       <tr>
         <td colSpan={2}>
-          <button className="btn btn-info" onClick={handleMenuItemAdd}>
+          <button
+            type="button"
+            className="btn btn-info"
+            onClick={() => {
+              fields.push({ title: '', sceneTitle: '' });
+            }}
+          >
             Add item
           </button>
         </td>

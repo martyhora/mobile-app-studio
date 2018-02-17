@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { reducer as formReducer } from 'redux-form';
 import auth, { IAuthState } from './auth';
 
 export interface AppState {
@@ -7,4 +8,5 @@ export interface AppState {
 
 export default combineReducers({
   auth,
+  form: formReducer,
 });

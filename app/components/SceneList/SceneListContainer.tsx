@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import SceneList from './SceneList';
 import SceneApi from '../../api/SceneApi';
 import { ISection } from '../Scene/SceneContainer';
@@ -47,24 +46,14 @@ class SceneListContainer extends React.Component<
     formErrors: [],
   };
 
-  handleParameterChange(parameter: string, e: ChangeEvent<HTMLInputElement>): void {
-    let scene: IScene = this.state.scene;
-
-    scene[parameter] = e.currentTarget.value;
-
-    this.setState({ scene });
-  }
-
   async handleSceneEdit(sceneId: number) {
     const scene: IScene = await SceneApi.fetchSceneById(sceneId, this.props.authToken);
 
     this.setState({ scene });
   }
 
-  async handleSceneSave(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const { title, id } = this.state.scene;
+  async handleSceneSave(values: IScene) {
+    const { title, id } = values;
 
     if (title === '') {
       return;
@@ -78,7 +67,7 @@ class SceneListContainer extends React.Component<
         this.props.authToken
       );
     } else {
-      responseData = await SceneApi.updateScene(id, this.state.scene, this.props.authToken);
+      responseData = await SceneApi.updateScene(id, values, this.props.authToken);
     }
 
     if (responseData.success === false) {
@@ -127,7 +116,6 @@ class SceneListContainer extends React.Component<
         scenes={this.state.scenes}
         scene={this.state.scene}
         formErrors={this.state.formErrors}
-        handleParameterChange={this.handleParameterChange.bind(this)}
         handleSceneRemove={this.handleSceneRemove.bind(this)}
         handleSceneSave={this.handleSceneSave.bind(this)}
         handleSceneEdit={this.handleSceneEdit.bind(this)}

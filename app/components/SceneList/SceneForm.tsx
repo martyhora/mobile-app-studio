@@ -1,16 +1,26 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import { IScene } from './SceneListContainer';
 import ErrorList from '../ErrorList';
+import { Field, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 
 interface ISceneProps {
-  scene: IScene;
   formErrors: Array<string>;
-  handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
-  handleSceneSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  handleSceneSave: (values: IScene) => Promise<void>;
 }
 
-const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }: ISceneProps) => (
+interface ISceneStateProps {
+  scene: IScene;
+}
+
+const SceneForm = ({
+  scene,
+  formErrors,
+  handleSceneSave,
+  initialValues,
+  handleSubmit,
+  submitting,
+}: InjectedFormProps<IScene> & ISceneProps & ISceneStateProps) => (
   <div id="sceneModal" className="modal fade" role="dialog">
     <div className="modal-dialog">
       <div className="modal-content">
@@ -20,7 +30,12 @@ const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }
           </button>
           <h4 className="modal-title">Scene</h4>
         </div>
-        <form className="form-horizontal" onSubmit={handleSceneSave}>
+        <form
+          className="form-horizontal"
+          onSubmit={handleSubmit((values: IScene) => {
+            handleSceneSave(values);
+          })}
+        >
           <div className="modal-body">
             <ErrorList errors={formErrors} />
 
@@ -31,15 +46,7 @@ const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }
                 </label>
 
                 <div className="col-sm-10">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputScene"
-                    placeholder="Title"
-                    value={scene.title}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      handleParameterChange('title', e)}
-                  />
+                  <Field name="title" component="input" type="text" className="form-control" />
                 </div>
               </div>
             </div>
@@ -47,7 +54,9 @@ const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }
           <div className="box-footer">
             <input
               type="submit"
-              className={`btn btn-info pull-right ${scene.title === '' ? 'disabled' : ''}`}
+              className={`btn btn-info pull-right ${
+                scene.title === '' || submitting ? 'disabled' : ''
+              }`}
               value="Save"
             />
           </div>
@@ -57,4 +66,18 @@ const SceneForm = ({ scene, formErrors, handleParameterChange, handleSceneSave }
   </div>
 );
 
-export default SceneForm;
+const form: string = 'scene';
+
+const selector = formValueSelector(form);
+
+export default connect((state: IScene) => ({
+  scene: {
+    title: selector(state, 'title'),
+    sections: selector(state, 'sections'),
+  } as IScene,
+}))(
+  reduxForm<IScene, ISceneProps & ISceneStateProps>({
+    form,
+    enableReinitialize: true,
+  })(SceneForm)
+);

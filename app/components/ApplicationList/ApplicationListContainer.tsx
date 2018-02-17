@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import ApplicationList from './ApplicationList';
 import ApplicationApi from '../../api/ApplicationApi';
 import { IMenuItem } from './MenuItems';
@@ -50,7 +49,7 @@ class ApplicationListContainer extends React.Component<
     formErrors: [],
   };
 
-  handleApplicationRemove(applicationIndex: number, applicationId: number): void {
+  handleApplicationRemove = (applicationIndex: number, applicationId: number): void => {
     ApplicationApi.deleteApplication(
       applicationId,
       () => {
@@ -62,9 +61,9 @@ class ApplicationListContainer extends React.Component<
       },
       this.props.authToken
     );
-  }
+  };
 
-  async handleApplicationEdit(applicationId: number) {
+  handleApplicationEdit = async (applicationId: number): Promise<void> => {
     const application = await ApplicationApi.fetchApplicationById(
       applicationId,
       this.props.authToken
@@ -73,12 +72,10 @@ class ApplicationListContainer extends React.Component<
     const scenes = await SceneApi.fetchScenesByApplicationId(applicationId, this.props.authToken);
 
     this.setState({ application, scenes });
-  }
+  };
 
-  async handleApplicationSave(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    const { title, apiBase, id } = this.state.application;
+  handleApplicationSave = async (values: IApplication): Promise<void> => {
+    const { title, apiBase, id } = values;
 
     if (title === '' || apiBase === '') {
       return;
@@ -87,16 +84,9 @@ class ApplicationListContainer extends React.Component<
     let responseData: ApiSaveResponse = null;
 
     if (!id) {
-      responseData = await ApplicationApi.addApplication(
-        this.state.application,
-        this.props.authToken
-      );
+      responseData = await ApplicationApi.addApplication(values, this.props.authToken);
     } else {
-      responseData = await ApplicationApi.updateApplication(
-        id,
-        this.state.application,
-        this.props.authToken
-      );
+      responseData = await ApplicationApi.updateApplication(id, values, this.props.authToken);
     }
 
     if (responseData.success === false) {
@@ -110,27 +100,7 @@ class ApplicationListContainer extends React.Component<
     this.fetchApplications();
 
     $('#applicationModal').modal('toggle');
-  }
-
-  handleParameterChange(parameter: string, e: ChangeEvent<HTMLInputElement>): void {
-    let application: IApplication = this.state.application;
-
-    application[parameter] = e.currentTarget.value;
-
-    this.setState({ application });
-  }
-
-  handleMenuItemChange(
-    parameter: string,
-    menuItemIndex: number,
-    e: ChangeEvent<HTMLInputElement>
-  ): void {
-    let application: IApplication = this.state.application;
-
-    application.menuItems[menuItemIndex][parameter] = e.currentTarget.value;
-
-    this.setState({ application });
-  }
+  };
 
   fetchApplications(): void {
     try {
@@ -146,33 +116,6 @@ class ApplicationListContainer extends React.Component<
     }
   }
 
-  handleMenuItemAdd(e: FormEvent<HTMLFormElement>): void {
-    e.preventDefault();
-
-    const application = this.state.application;
-
-    this.setState({
-      application: {
-        ...application,
-        menuItems: [
-          ...application.menuItems,
-          {
-            title: '',
-            sceneTitle: '',
-          },
-        ],
-      },
-    });
-  }
-
-  handleMenuItemRemove(menuItemIndex: number): void {
-    let application: IApplication = this.state.application;
-
-    application.menuItems.splice(menuItemIndex, 1);
-
-    this.setState({ application });
-  }
-
   componentDidMount() {
     this.fetchApplications();
   }
@@ -185,14 +128,10 @@ class ApplicationListContainer extends React.Component<
         apiErrors={this.state.apiErrors}
         formErrors={this.state.formErrors}
         application={this.state.application}
-        handleApplicationRemove={this.handleApplicationRemove.bind(this)}
-        handleApplicationSave={this.handleApplicationSave.bind(this)}
-        handleParameterChange={this.handleParameterChange.bind(this)}
-        handleApplicationEdit={this.handleApplicationEdit.bind(this)}
-        handleMenuItemChange={this.handleMenuItemChange.bind(this)}
-        handleMenuItemAdd={this.handleMenuItemAdd.bind(this)}
-        handleMenuItemRemove={this.handleMenuItemRemove.bind(this)}
+        handleApplicationRemove={this.handleApplicationRemove}
+        handleApplicationEdit={this.handleApplicationEdit}
         scenes={this.state.scenes}
+        handleApplicationSave={this.handleApplicationSave}
       />
     );
   }

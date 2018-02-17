@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import { IScene } from './SceneListContainer';
 import { Link } from 'react-router-dom';
 import SceneForm from './SceneForm';
@@ -9,17 +8,15 @@ interface ISceneProps {
   scene: IScene;
   scenes: Array<IScene>;
   formErrors: Array<string>;
-  handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
   handleSceneRemove: (sceneIndex: number, sceneId: number) => void;
   handleSceneEdit: (sceneId: number) => void;
-  handleSceneSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
+  handleSceneSave: (values: IScene) => Promise<void>;
 }
 
 const SceneList = ({
   scene,
   scenes,
   formErrors,
-  handleParameterChange,
   handleSceneRemove,
   handleSceneEdit,
   handleSceneSave,
@@ -72,12 +69,7 @@ const SceneList = ({
       ))}
     </div>
 
-    <SceneForm
-      scene={scene}
-      formErrors={formErrors}
-      handleParameterChange={handleParameterChange}
-      handleSceneSave={handleSceneSave}
-    />
+    <SceneForm formErrors={formErrors} handleSceneSave={handleSceneSave} initialValues={scene} />
   </div>
 );
 
