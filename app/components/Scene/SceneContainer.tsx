@@ -1,6 +1,6 @@
 import * as React from 'react';
-import Scene from './Scene';
 import { ChangeEvent } from 'react';
+import Scene from './Scene';
 import { arrayMove } from 'react-sortable-hoc';
 import SectionApi from '../../api/SectionApi';
 import { IScene } from '../SceneList/SceneListContainer';
@@ -8,6 +8,7 @@ import SceneApi from '../../api/SceneApi';
 import { SECTION_BUTTON, SECTION_LISTVIEW, SECTION_TEXT } from '../../constants';
 import { connect } from 'react-redux';
 import { ColorResult } from 'react-color';
+import { AppState } from '../../reducers';
 
 export interface ISection {
   [key: string]: any;
@@ -183,6 +184,6 @@ class SceneContainer extends React.Component<ISceneContainerProps, ISceneContain
   }
 }
 
-export default connect(state => ({
+export default connect((state: AppState) => ({
   authToken: state.auth.authToken,
 }))(SceneContainer);

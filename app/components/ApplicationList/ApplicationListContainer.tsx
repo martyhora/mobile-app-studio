@@ -1,12 +1,13 @@
 import * as React from 'react';
-import ApplicationList from './ApplicationList';
 import { ChangeEvent, FormEvent } from 'react';
+import ApplicationList from './ApplicationList';
 import ApplicationApi from '../../api/ApplicationApi';
 import { IMenuItem } from './MenuItems';
 import { IScene } from '../SceneList/SceneListContainer';
 import SceneApi from '../../api/SceneApi';
 import { connect } from 'react-redux';
 import { ApiSaveResponse } from '../../api/BaseApi';
+import { AppState } from '../../reducers';
 
 export interface IApplication {
   [key: string]: any;
@@ -145,15 +146,23 @@ class ApplicationListContainer extends React.Component<
     }
   }
 
-  handleMenuItemAdd(): void {
-    let application: IApplication = this.state.application;
+  handleMenuItemAdd(e: FormEvent<HTMLFormElement>): void {
+    e.preventDefault();
 
-    application.menuItems.push({
-      title: '',
-      sceneTitle: '',
+    const application = this.state.application;
+
+    this.setState({
+      application: {
+        ...application,
+        menuItems: [
+          ...application.menuItems,
+          {
+            title: '',
+            sceneTitle: '',
+          },
+        ],
+      },
     });
-
-    this.setState({ application });
   }
 
   handleMenuItemRemove(menuItemIndex: number): void {
@@ -189,6 +198,6 @@ class ApplicationListContainer extends React.Component<
   }
 }
 
-export default connect(state => ({
+export default connect((state: AppState) => ({
   authToken: state.auth.authToken,
 }))(ApplicationListContainer);

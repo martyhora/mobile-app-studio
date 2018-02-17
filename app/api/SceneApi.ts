@@ -32,7 +32,7 @@ export default class SceneApi {
     authToken: string
   ): Promise<Array<IScene>> {
     return BaseSecuredApi.fetchDataByResourceId(
-      `${API_BASE}/scenes/scenes-to-appliacation`,
+      `${API_BASE}scenes/scenes-to-application`,
       sceneId,
       authToken
     );

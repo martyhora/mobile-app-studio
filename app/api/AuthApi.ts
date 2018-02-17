@@ -1,8 +1,9 @@
 import { API_AUTH_URI, API_BASE } from '../constants';
 import axios, { AxiosResponse } from 'axios';
 
-interface IApiResponse {
+interface IApiResponse<Payload> {
   success: boolean;
+  payload?: Payload;
 }
 
 export interface IUser {
@@ -11,15 +12,18 @@ export interface IUser {
   username: string;
 }
 
-export interface IUserApiResponse extends IApiResponse {
+interface IUserPayload {
   user?: IUser;
-  authorizationFailed?: boolean;
 }
 
-export interface IApiAuthResponse extends IApiResponse {
+export type IUserApiResponse = IApiResponse<IUserPayload>;
+
+interface IAuthPayload {
   authToken?: string;
   user?: IUser;
 }
+
+export type IApiAuthResponse = IApiResponse<IAuthPayload>;
 
 export class AuthError extends Error {}
 
@@ -41,7 +45,7 @@ export default class AuthApi {
   static async fetchUser(authToken: string): Promise<IUserApiResponse> {
     const response: AxiosResponse = await axios({
       method: 'get',
-      url: `${API_BASE}/user`,
+      url: `${API_BASE}user`,
       headers: { Authorization: `Bearer ${authToken}` },
     });
 

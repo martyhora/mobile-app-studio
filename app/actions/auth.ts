@@ -1,5 +1,4 @@
 import AuthApi, { IApiAuthResponse, IUser, IUserApiResponse } from '../api/AuthApi';
-import history from '../history';
 import { AUTH_TOKEN_KEY } from '../constants';
 import { Dispatch } from 'react-redux';
 import { AppState } from '../reducers/index';
@@ -90,9 +89,9 @@ export const loginUser: ActionCreator<ThunkAction<Promise<void>, AppState, {}>> 
     try {
       const authResponse: IApiAuthResponse = await AuthApi.login(username, password);
 
-      dispatch(handleLoginSuccess(authResponse.authToken, authResponse.user));
+      dispatch(handleLoginSuccess(authResponse.payload.authToken, authResponse.payload.user));
 
-      sessionStorage.setItem(AUTH_TOKEN_KEY, authResponse.authToken);
+      sessionStorage.setItem(AUTH_TOKEN_KEY, authResponse.payload.authToken);
     } catch (authError) {
       dispatch(handleWrongLoginCredentials());
     }
@@ -128,12 +127,16 @@ export const setLoggedUser: ActionCreator<
   try {
     const userData: IUserApiResponse = await AuthApi.fetchUser(getState().auth.authToken);
 
-    if (userData.success === false && userData.authorizationFailed === true) {
-      dispatch(logoutUser());
+    if (userData.success === true) {
+      dispatch(setUser(userData.payload.user));
     } else {
-      dispatch(setUser(userData.user));
+      dispatch(logoutUser());
     }
   } catch (error) {
-    console.log(error);
+    if (error.response && error.response.status === 401) {
+      dispatch(logoutUser());
+    } else {
+      console.log(error);
+    }
   }
 };

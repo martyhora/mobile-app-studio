@@ -1,10 +1,11 @@
 import * as React from 'react';
-import SceneList from './SceneList';
 import { ChangeEvent, FormEvent } from 'react';
+import SceneList from './SceneList';
 import SceneApi from '../../api/SceneApi';
 import { ISection } from '../Scene/SceneContainer';
 import { connect } from 'react-redux';
 import { ApiSaveResponse } from '../../api/BaseApi';
+import { AppState } from '../../reducers';
 
 export interface IScene {
   [key: string]: any;
@@ -135,6 +136,6 @@ class SceneListContainer extends React.Component<
   }
 }
 
-export default connect(state => ({
+export default connect((state: AppState) => ({
   authToken: state.auth.authToken,
 }))(SceneListContainer);
