@@ -1,35 +1,30 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import { IApplication } from './ApplicationListContainer';
 import MenuItems from './MenuItems';
 import { IScene } from '../SceneList/SceneListContainer';
+import { Field, FieldArray, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
 import ErrorList from '../ErrorList';
+import { connect } from 'react-redux';
 
 interface IApplicationProps {
-  application: IApplication;
-  handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
-  handleMenuItemChange: (
-    parameter: string,
-    menuItemIndex: number,
-    e: ChangeEvent<HTMLInputElement>
-  ) => void;
-  handleApplicationSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
-  handleMenuItemAdd: () => void;
-  handleMenuItemRemove: (menuItemIndex: number) => void;
-  scenes: Array<IScene>;
   formErrors: Array<string>;
+  handleApplicationSave: (values: IApplication) => Promise<void>;
+  scenes: Array<IScene>;
+}
+
+interface IApplicationStateProps {
+  application: IApplication;
 }
 
 const ApplicationForm = ({
-  application,
-  handleParameterChange,
-  handleMenuItemChange,
-  handleApplicationSave,
-  handleMenuItemAdd,
-  handleMenuItemRemove,
   scenes,
+  initialValues,
   formErrors,
-}: IApplicationProps) => (
+  handleSubmit,
+  submitting,
+  handleApplicationSave,
+  application,
+}: InjectedFormProps<IApplication> & IApplicationProps & IApplicationStateProps) => (
   <div id="applicationModal" className="modal fade" role="dialog">
     <div className="modal-dialog">
       <div className="modal-content">
@@ -39,7 +34,12 @@ const ApplicationForm = ({
           </button>
           <h4 className="modal-title">Application</h4>
         </div>
-        <form className="form-horizontal" onSubmit={handleApplicationSave}>
+        <form
+          className="form-horizontal"
+          onSubmit={handleSubmit((values: IApplication) => {
+            handleApplicationSave(values);
+          })}
+        >
           <div className="modal-body">
             <ErrorList errors={formErrors} />
 
@@ -50,14 +50,7 @@ const ApplicationForm = ({
                 </label>
 
                 <div className="col-sm-10">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputApplication"
-                    placeholder="Title"
-                    value={application.title}
-                    onChange={e => handleParameterChange('title', e)}
-                  />
+                  <Field name="title" component="input" type="text" className="form-control" />
                 </div>
               </div>
             </div>
@@ -68,14 +61,7 @@ const ApplicationForm = ({
                 </label>
 
                 <div className="col-sm-10">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="inputApplication2"
-                    placeholder="API base"
-                    value={application.apiBase}
-                    onChange={e => handleParameterChange('apiBase', e)}
-                  />
+                  <Field name="apiBase" component="input" type="text" className="form-control" />
                 </div>
               </div>
             </div>
@@ -88,13 +74,7 @@ const ApplicationForm = ({
                   </label>
 
                   <div className="col-sm-10">
-                    <MenuItems
-                      menuItems={application.menuItems}
-                      scenes={scenes}
-                      handleMenuItemChange={handleMenuItemChange}
-                      handleMenuItemAdd={handleMenuItemAdd}
-                      handleMenuItemRemove={handleMenuItemRemove}
-                    />
+                    <FieldArray name="menuItems" component={MenuItems} props={{ scenes }} />
                   </div>
                 </div>
               </div>
@@ -103,10 +83,11 @@ const ApplicationForm = ({
           <div className="box-footer">
             <input
               type="submit"
-              className={`btn btn-info pull-right ${application.title === '' ||
-              application.apiBase === ''
-                ? 'disabled'
-                : ''}`}
+              className={`btn btn-info pull-right ${
+                application.title === '' || application.apiBase === '' || submitting
+                  ? 'disabled'
+                  : ''
+              }`}
               value="Save"
             />
           </div>
@@ -116,4 +97,19 @@ const ApplicationForm = ({
   </div>
 );
 
-export default ApplicationForm;
+const form: string = 'application';
+
+const selector = formValueSelector(form);
+
+export default connect((state: IApplication) => ({
+  application: {
+    id: selector(state, 'id'),
+    title: selector(state, 'title'),
+    apiBase: selector(state, 'apiBase'),
+  } as IApplication,
+}))(
+  reduxForm<IApplication, IApplicationProps & IApplicationStateProps>({
+    form,
+    enableReinitialize: true,
+  })(ApplicationForm)
+);

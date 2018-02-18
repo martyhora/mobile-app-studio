@@ -1,58 +1,54 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import ErrorList from '../ErrorList';
 import { APP_TITLE } from '../../constants';
+import { Field, InjectedFormProps, reduxForm } from 'redux-form';
 
-interface ILoginFormProps {
+interface ILoginFormData {
   username: string;
   password: string;
+}
+
+interface ILoginFormProps {
   errors: Array<string>;
+  handleLoginSubmit: (username: string, password: string) => void;
   isAuthenticating: boolean;
-  handleUsernameChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handlePasswordChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleLoginSubmit: (e: FormEvent<HTMLFormElement>) => void;
 }
 
 const LoginForm = ({
-  username,
-  password,
   errors,
-  isAuthenticating,
-  handleUsernameChange,
-  handlePasswordChange,
   handleLoginSubmit,
-}: ILoginFormProps) => (
+  isAuthenticating,
+  handleSubmit,
+  submitting,
+}: InjectedFormProps<ILoginFormData> & ILoginFormProps) => (
   <div className="login-box">
     <div className="login-logo">
       <a href="">
         <b>{APP_TITLE}</b>
       </a>
     </div>
-    <form action="" onSubmit={handleLoginSubmit}>
+    <form
+      action=""
+      onSubmit={handleSubmit((values: ILoginFormData) => {
+        handleLoginSubmit(values.username, values.password);
+      })}
+    >
       <div className="login-box-body">
         <p className="login-box-msg">Log in, please.</p>
 
         <ErrorList header="Login failed" errors={errors} />
 
         <div className="form-group has-feedback">
-          <input
-            type="text"
-            name="username"
-            className="form-control"
-            value={username}
-            onChange={handleUsernameChange}
-            required={true}
-          />
+          <Field name="username" component="input" type="text" className="form-control" required />
           <span className="glyphicon glyphicon-envelope form-control-feedback" />
         </div>
         <div className="form-group has-feedback">
-          <input
-            type="password"
+          <Field
             name="password"
+            component="input"
+            type="password"
             className="form-control"
-            value={password}
-            onChange={handlePasswordChange}
-            required={true}
+            required
           />
           <span className="glyphicon glyphicon-lock form-control-feedback" />
         </div>
@@ -60,11 +56,16 @@ const LoginForm = ({
           type="submit"
           className="btn btn-primary btn-flat btn--full-width"
           value="Log in"
-          disabled={isAuthenticating}
+          disabled={submitting || isAuthenticating}
         />
       </div>
     </form>
   </div>
 );
 
-export default LoginForm;
+const form: string = 'login';
+
+export default reduxForm<ILoginFormData, ILoginFormProps>({
+  form,
+  enableReinitialize: true,
+})(LoginForm);

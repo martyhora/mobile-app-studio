@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ChangeEvent } from 'react';
 import { ISection } from './SceneContainer';
 import {
   SECTION_BUTTON,
@@ -7,7 +8,6 @@ import {
   SECTION_TEXT,
   SECTION_TEXTBOX,
 } from '../../constants';
-import { ChangeEvent } from 'react';
 
 interface ISectionType {
   id: string;
@@ -53,10 +53,12 @@ const SectionsList = ({
         {sectionTypes.map((sectionType, i) => (
           <button
             type="button"
-            className={`btn btn-info warning btn-lg btn-block ${sectionTitle === '' ||
-            sections.filter(section => section.title === sectionTitle).length > 0
-              ? 'disabled'
-              : ''}`}
+            className={`btn btn-info warning btn-lg btn-block ${
+              sectionTitle === '' ||
+              sections.filter(section => section.title === sectionTitle).length > 0
+                ? 'disabled'
+                : ''
+            }`}
             style={{ textAlign: 'left', marginBottom: '15px' }}
             onClick={() => {
               addSection(sectionType.id);

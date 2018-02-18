@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { ChangeEvent, FormEvent } from 'react';
 import { IApplication } from './ApplicationListContainer';
 import { Link } from 'react-router-dom';
 import ApplicationForm from './ApplicationForm';
@@ -11,19 +10,11 @@ interface IApplicationProps {
   applications: Array<IApplication>;
   handleApplicationRemove: (applicationIndex: number, applicationId: number) => void;
   handleApplicationEdit: (applicationId: number) => void;
-  handleMenuItemChange: (
-    parameter: string,
-    menuItemIndex: number,
-    e: ChangeEvent<HTMLInputElement>
-  ) => void;
-  handleMenuItemAdd: () => void;
-  handleApplicationSave: (e: FormEvent<HTMLFormElement>) => Promise<void>;
-  handleMenuItemRemove: (menuItemIndex: number) => void;
-  handleParameterChange: (parameter: string, e: ChangeEvent<HTMLInputElement>) => void;
   scenes: Array<IScene>;
   isLoading: boolean;
   apiErrors: Array<string>;
   formErrors: Array<string>;
+  handleApplicationSave: (values: IApplication) => Promise<void>;
 }
 
 const ApplicationList = ({
@@ -31,15 +22,11 @@ const ApplicationList = ({
   applications,
   handleApplicationRemove,
   handleApplicationEdit,
-  handleMenuItemChange,
-  handleMenuItemAdd,
-  handleApplicationSave,
-  handleMenuItemRemove,
-  handleParameterChange,
   scenes,
   isLoading,
   apiErrors,
   formErrors,
+  handleApplicationSave,
 }: IApplicationProps) => (
   <div>
     <div style={{ marginBottom: '20px' }}>
@@ -129,14 +116,10 @@ const ApplicationList = ({
     </div>
 
     <ApplicationForm
-      application={application}
       scenes={scenes}
       formErrors={formErrors}
       handleApplicationSave={handleApplicationSave}
-      handleParameterChange={handleParameterChange}
-      handleMenuItemChange={handleMenuItemChange}
-      handleMenuItemAdd={handleMenuItemAdd}
-      handleMenuItemRemove={handleMenuItemRemove}
+      initialValues={application}
     />
   </div>
 );
